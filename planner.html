@@ -65,16 +65,80 @@
       <h2 style="font-family:var(--font-display); color:var(--white); font-size:clamp(22px,3.2vw,30px); margin:0 0 16px;">Why we built it this way</h2>
       <p style="color:var(--lavender-dim); font-size:15px; margin:0 0 16px;">Most planners are either pure productivity (no room for mindset work) or pure vision-board energy (no room for actually getting things done). This one holds both — grounded manifestation practice on one side, a real task tracker on the other, in the same daily spread.</p>
       <p style="color:var(--lavender-dim); font-size:15px; margin:0 0 28px;">We're finishing the design now. Early access members get first pricing and a say in the final layout before general release.</p>
-      <a href="#early-access" class="btn btn-gold">Join Early Access →</a>
+      <a href="#try-it" class="btn btn-gold">Try It Free →</a>
     </div>
+  </div>
+</section>
+
+<section class="app-section" id="try-it">
+  <div class="section-head">
+    <span class="kicker">Free, Right Now</span>
+    <h2>Try the daily tool</h2>
+    <p>A free preview of what's coming — your daily affirmation, a simple task list, and one journal entry a day. No card, no cost.</p>
+  </div>
+
+  <div class="app-shell">
+
+    <!-- ===== AUTH PANEL ===== -->
+    <div id="app-auth-panel">
+      <div class="app-tabs">
+        <button class="app-tab active" id="app-tab-signup" type="button">Sign Up</button>
+        <button class="app-tab" id="app-tab-login" type="button">Log In</button>
+      </div>
+
+      <p id="app-auth-message" class="app-message"></p>
+
+      <form id="app-signup-form" class="app-form">
+        <input type="email" id="app-signup-email" placeholder="you@email.com" required autocomplete="email">
+        <input type="password" id="app-signup-password" placeholder="Password (6+ characters)" required minlength="6" autocomplete="new-password">
+        <button type="submit" class="btn btn-gold">Create Free Account</button>
+      </form>
+
+      <form id="app-login-form" class="app-form app-hidden">
+        <input type="email" id="app-login-email" placeholder="you@email.com" required autocomplete="email">
+        <input type="password" id="app-login-password" placeholder="Password" required autocomplete="current-password">
+        <button type="submit" class="btn btn-gold">Log In</button>
+      </form>
+    </div>
+
+    <!-- ===== DASHBOARD (hidden until logged in) ===== -->
+    <div id="app-dashboard" class="app-hidden">
+      <div class="dash-header">
+        <span class="who">Signed in as <strong id="app-who-email"></strong></span>
+        <button id="app-logout-btn" class="btn-link-out" type="button">Log out</button>
+      </div>
+
+      <div class="dash-block">
+        <h3>Today's Affirmation</h3>
+        <p class="dash-affirmation" id="app-affirmation-text">Loading…</p>
+      </div>
+
+      <div class="dash-block">
+        <h3>Today's Tasks</h3>
+        <div id="app-task-list"></div>
+        <div class="task-add-row">
+          <input type="text" id="app-task-input" placeholder="Add a task for today…">
+          <button id="app-task-add-btn" class="btn btn-outline" type="button">Add</button>
+        </div>
+      </div>
+
+      <div class="dash-block">
+        <h3>Today's Journal</h3>
+        <textarea id="app-journal-box" class="journal-box" placeholder="What's on your mind today?"></textarea>
+        <div class="journal-save-row">
+          <span class="journal-status" id="app-journal-status"></span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
 <section class="newsletter" id="early-access">
   <div class="newsletter-inner">
     <span class="kicker">Early Access</span>
-    <h2>Be first to know when it launches</h2>
-    <p>We'll email you the moment early access opens — plus a launch-week discount for subscribers.</p>
+    <h2>Be first to know when the full version launches</h2>
+    <p>We'll email you the moment the paid printable version opens — plus a launch-week discount for subscribers.</p>
     <form class="newsletter-form" data-live-endpoint="false" action="#" method="post">
       <input type="email" name="email" placeholder="you@email.com" required>
       <button type="submit" class="btn btn-gold">Notify Me</button>
@@ -108,5 +172,7 @@
 </footer>
 
 <script src="assets/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>
