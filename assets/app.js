@@ -7,8 +7,8 @@
 // `prakriya_data` table + policies described in SETUP_PRAKRIYA.md at the
 // repo root. Nothing here can substitute for real project credentials —
 // see that file for the exact steps and SQL to run.
-const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL'; // e.g. https://xxxxx.supabase.co
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_PUBLIC_KEY';
+const SUPABASE_URL = 'https://xuijptnqnioukflgrjsr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aWpwdG5xbmlvdWtmbGdyanNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0NjcwOTEsImV4cCI6MjEwMzA0MzA5MX0.6uKuXqZmlPb8EXasop40PbQqSA2y1whEU2YadUkodEY';
 
 const FEEDBACK_EMAIL = 'aandccreativecompany@gmail.com';
 
