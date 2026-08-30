@@ -1,5 +1,5 @@
 // ============================================
-// A&C Creative Company — shared site behavior
+// A&C Creative Ventures — shared site behavior
 // ============================================
 
 // Mobile nav toggle
@@ -85,6 +85,37 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAffirmation();
   const btn = document.getElementById('shuffle-affirmation');
   if (btn) btn.addEventListener('click', shuffleAffirmation);
+});
+
+// ---------- Social feed embeds (Instagram / Threads) ----------
+// The two slots below (#ig-embed-slot, #threads-embed-slot) start empty.
+// To feature a real post: open it on Instagram or Threads, use its "..."
+// menu → Embed → Copy Embed Code, and paste the <blockquote> snippet
+// straight into the matching slot's <div> in index.html. This function
+// only loads the platform's own embed.js (no API key, no backend) when it
+// notices a real embed was pasted in, and hides the "follow us" fallback
+// once at least one real post is showing.
+document.addEventListener('DOMContentLoaded', () => {
+  const igSlot = document.getElementById('ig-embed-slot');
+  const threadsSlot = document.getElementById('threads-embed-slot');
+  const fallback = document.getElementById('social-feed-fallback');
+  if (!igSlot && !threadsSlot) return;
+
+  const hasContent = (el) => !!(el && el.children.length > 0);
+  const igHasPosts = hasContent(igSlot);
+  const threadsHasPosts = hasContent(threadsSlot);
+
+  function loadScriptOnce(src) {
+    if (document.querySelector(`script[src="${src}"]`)) return;
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    document.body.appendChild(s);
+  }
+
+  if (igHasPosts) loadScriptOnce('https://www.instagram.com/embed.js');
+  if (threadsHasPosts) loadScriptOnce('https://www.threads.net/embed.js');
+  if ((igHasPosts || threadsHasPosts) && fallback) fallback.style.display = 'none';
 });
 
 // ---------- Newsletter form ----------

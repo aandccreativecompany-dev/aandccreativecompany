@@ -688,3 +688,164 @@ footer {
 }
 .mm-num { font-family: var(--font-display); font-size: 22px; color: var(--gold-light); }
 .mm-label { font-size: 12px; color: var(--muted); text-align: center; }
+
+/* ============================================================
+   Prakriyā page — whimsical hero, feature strip, app download
+   ============================================================ */
+.prakriya-hero {
+  position: relative;
+  padding: 90px 24px 60px;
+  text-align: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+.prakriya-hero::before,
+.prakriya-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  z-index: -1;
+  opacity: 0.5;
+}
+.prakriya-hero::before {
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(242,185,59,0.35), transparent 70%);
+  top: -80px; left: 8%;
+  animation: prakriyaFloat 9s ease-in-out infinite;
+}
+.prakriya-hero::after {
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(76,42,133,0.55), transparent 70%);
+  bottom: -60px; right: 10%;
+  animation: prakriyaFloat 11s ease-in-out infinite reverse;
+}
+@keyframes prakriyaFloat {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-24px) translateX(14px); }
+}
+.prakriya-sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.prakriya-sparkles span {
+  position: absolute;
+  color: var(--gold);
+  opacity: 0.75;
+  animation: prakriyaTwinkle 3.2s ease-in-out infinite;
+}
+.prakriya-sparkles span:nth-child(1) { top: 18%; left: 12%; font-size: 22px; animation-delay: 0s; }
+.prakriya-sparkles span:nth-child(2) { top: 30%; right: 16%; font-size: 16px; animation-delay: 0.6s; }
+.prakriya-sparkles span:nth-child(3) { bottom: 22%; left: 22%; font-size: 18px; animation-delay: 1.2s; }
+.prakriya-sparkles span:nth-child(4) { bottom: 30%; right: 24%; font-size: 14px; animation-delay: 1.8s; }
+.prakriya-sparkles span:nth-child(5) { top: 8%; left: 48%; font-size: 15px; animation-delay: 2.4s; }
+@keyframes prakriyaTwinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 0.9; transform: scale(1.15) rotate(15deg); }
+}
+.prakriya-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 6vw, 64px);
+  color: var(--white);
+  margin: 0 0 16px;
+  letter-spacing: 1px;
+}
+.prakriya-hero h1 span { color: var(--gold); }
+.prakriya-hero p { color: var(--lavender-dim); font-size: 17px; max-width: 620px; margin: 0 auto; }
+
+.feature-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  max-width: var(--max-width);
+  margin: 0 auto 60px;
+  padding: 0 24px;
+}
+.feature-chip {
+  background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+  border: 1px solid rgba(242,185,59,0.18);
+  border-radius: 16px;
+  padding: 20px 14px;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.feature-chip:hover { transform: translateY(-4px) rotate(-1deg); border-color: rgba(242,185,59,0.5); }
+.feature-chip .emoji { font-size: 26px; display: block; margin-bottom: 8px; }
+.feature-chip span.label { font-size: 12.5px; font-weight: 700; color: var(--gold-light); letter-spacing: 0.3px; }
+
+/* ---------- Get the app / APK download band ---------- */
+.app-download-band {
+  max-width: 900px;
+  margin: 0 auto 60px;
+  padding: 0 24px;
+}
+.app-download-card {
+  background: linear-gradient(135deg, rgba(242,185,59,0.1), rgba(76,42,133,0.3));
+  border: 1px solid rgba(242,185,59,0.3);
+  border-radius: 22px;
+  padding: 36px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.app-download-card h3 { font-family: var(--font-display); color: var(--white); font-size: 20px; margin: 0 0 8px; }
+.app-download-card p { color: var(--lavender-dim); font-size: 14.5px; margin: 0; max-width: 46ch; }
+.app-download-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.app-download-actions .btn { white-space: nowrap; }
+.app-download-note { font-size: 12px; color: var(--muted); max-width: 220px; }
+
+/* ============================================================
+   Personal Care — form embed card
+   ============================================================ */
+.form-embed-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(242,185,59,0.2);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+.form-embed-head h3 { font-family: var(--font-display); color: var(--white); font-size: 18px; margin: 10px 0 6px; }
+.form-embed-head p { color: var(--muted); font-size: 13px; margin: 0 0 18px; }
+.form-embed-frame {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(242,185,59,0.2);
+  background: rgba(255,255,255,0.9);
+}
+.form-embed-frame iframe {
+  width: 100%;
+  min-height: 900px;
+  border: 0;
+  display: block;
+}
+
+/* ============================================================
+   Social feed embeds (Instagram / Threads)
+   ============================================================ */
+.social-feed-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+@media (max-width: 780px) { .social-feed-grid { grid-template-columns: 1fr; } }
+.social-feed-col h3 {
+  font-family: var(--font-display);
+  color: var(--white);
+  font-size: 16px;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.embed-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.embed-slot:empty { display: none; }
+#social-feed-fallback { margin-top: 40px; }
