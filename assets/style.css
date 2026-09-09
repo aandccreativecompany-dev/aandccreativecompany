@@ -533,11 +533,13 @@ footer {
   margin: 0 auto;
 }
 .content-card {
+  display: block;
   border: 1px solid rgba(var(--gold-rgb),0.18);
   border-radius: var(--radius);
   overflow: hidden;
   background: rgba(var(--white-rgb),0.03);
   transition: transform 0.2s, border-color 0.2s;
+  text-decoration: none;
 }
 .content-card:hover { transform: translateY(-4px); border-color: rgba(var(--gold-rgb),0.4); }
 .content-card .thumb {
@@ -643,6 +645,101 @@ footer {
 .video-embed iframe { width: 100%; height: 100%; border: 0; display: block; }
 .video-embed-featured { max-width: 860px; margin: 0 auto 48px; }
 .video-embed-featured .video-embed { aspect-ratio: 16/9; }
+
+/* ---------- Blog / article pages ---------- */
+.article-hero {
+  padding: 60px 24px 20px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.article-hero .breadcrumb { display: block; margin-bottom: 20px; color: var(--muted); font-size: 13px; }
+.article-hero .breadcrumb a { color: var(--gold); }
+.article-hero h1 { font-family: var(--font-display); color: var(--white); font-size: clamp(28px,4.4vw,44px); line-height: 1.15; margin: 0 0 18px; }
+.article-hero .article-dek { color: var(--lavender-dim); font-size: 18px; margin: 0 0 8px; }
+.article-hero .article-meta { color: var(--muted); font-size: 13px; }
+
+.article-body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 30px 24px 90px;
+  color: var(--lavender-dim);
+  font-size: 17px;
+  line-height: 1.75;
+}
+.article-body h2 { font-family: var(--font-display); color: var(--white); font-size: clamp(21px,3vw,26px); margin: 48px 0 18px; }
+.article-body h3 { font-family: var(--font-display); color: var(--white); font-size: 18px; margin: 32px 0 12px; }
+.article-body p { margin: 0 0 20px; }
+.article-body ul, .article-body ol { margin: 0 0 20px; padding-left: 22px; }
+.article-body li { margin-bottom: 10px; }
+.article-body a { color: var(--gold); text-decoration: underline; text-decoration-color: rgba(var(--gold-rgb),0.4); }
+.article-body strong { color: var(--white); }
+
+.stat-callout {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: rgba(var(--gold-rgb),0.08);
+  border: 1px solid rgba(var(--gold-rgb),0.3);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 32px 0;
+}
+.stat-callout .stat-num {
+  font-family: var(--font-display);
+  font-size: clamp(30px,5vw,42px);
+  color: var(--gold);
+  white-space: nowrap;
+  line-height: 1;
+}
+.stat-callout .stat-label { color: var(--lavender-dim); font-size: 15px; margin: 0; }
+
+.chart-card {
+  background: rgba(var(--white-rgb),0.03);
+  border: 1px solid rgba(var(--gold-rgb),0.18);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin: 36px 0;
+}
+.chart-card h4 { font-family: var(--font-display); color: var(--white); font-size: 15px; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 1px; }
+.chart-card svg { width: 100%; height: auto; display: block; }
+.chart-card .chart-caption { color: var(--muted); font-size: 13px; margin: 16px 0 0; line-height: 1.5; }
+
+.action-box {
+  background: linear-gradient(135deg, rgba(var(--gold-rgb),0.12), rgba(var(--violet-rgb),0.3));
+  border: 1px solid rgba(var(--gold-rgb),0.3);
+  border-radius: var(--radius);
+  padding: 28px 28px 30px;
+  margin: 40px 0;
+}
+.action-box .kicker { margin-bottom: 12px; }
+.action-box p:last-child { margin-bottom: 0; }
+
+.source-list {
+  border-top: 1px solid rgba(var(--gold-rgb),0.15);
+  margin-top: 50px;
+  padding-top: 24px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.source-list h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-family: var(--font-body); font-weight: 700; margin: 0 0 12px; }
+.source-list ol { padding-left: 18px; margin: 0; }
+.source-list li { margin-bottom: 8px; }
+.source-list a { color: var(--gold-light); }
+
+.article-cta-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 40px 0;
+}
+
+.related-articles {
+  border-top: 1px solid rgba(var(--gold-rgb),0.15);
+  margin-top: 40px;
+  padding-top: 30px;
+}
+.related-articles h3 { font-family: var(--font-body); font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 0 0 16px; }
+.related-articles a { display: block; color: var(--gold-light); font-weight: 600; margin-bottom: 10px; }
 
 /* ---------- Utility ---------- */
 .center { text-align: center; }

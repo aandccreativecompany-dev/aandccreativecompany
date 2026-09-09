@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  (function() {
+    try {
+      var t = localStorage.getItem('ac-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 3-Task Rule for Days That Feel Chaotic — A&amp;C Creative Ventures</title>
+<meta name="description" content="A simple constraint that turns an overwhelming to-do list into a day you can actually finish — backed by real research on decision fatigue.">
+<link rel="stylesheet" href="/assets/style.css">
+<!-- Google AdSense site verification -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1274669317188546"
+     crossorigin="anonymous"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1274669317188546",
+    enable_page_level_ads: true
+  });
+</script>
+</head>
+<body class="bg-gradient">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="var(--ink-deep)" stroke="var(--logo-blue)" stroke-width="2.5"/>
+        <circle cx="50" cy="46" r="24" fill="var(--logo-pink)"/>
+        <g stroke="var(--logo-pink)" stroke-width="2" opacity="0.7">
+          <line x1="50" y1="12" x2="50" y2="18"/><line x1="74" y1="22" x2="70" y2="26"/><line x1="26" y1="22" x2="30" y2="26"/>
+        </g>
+        <polygon points="50,42 68,78 32,78" fill="var(--logo-blue)"/>
+        <rect x="20" y="78" width="60" height="4" fill="var(--logo-pink)"/>
+      </svg>
+      A&amp;C CREATIVE CO.
+    </a>
+    <div class="nav-right">
+      <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/productivity" class="active">Productivity</a>
+      <a href="/outcome-engineering">Outcome Engineering</a>
+      <a href="/motivation">Motivation</a>
+      <a href="/prakriya">Prakriya</a>
+      <a href="/personal-care">Personal Care</a>
+      <a href="/products">Products</a>
+      <a href="/about">About</a>
+    </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light and dark theme" title="Toggle theme"><span class="icon-light">☀️</span><span class="icon-dark">🌙</span></button>
+      <button class="nav-toggle">☰</button>
+    </div>
+  </div>
+</nav>
+
+<div class="article-hero">
+  <span class="breadcrumb"><a href="/productivity">Productivity</a> / Daily Habits</span>
+  <h1>The 3-Task Rule for Days That Feel Chaotic</h1>
+  <p class="article-dek">A simple constraint that turns an overwhelming to-do list into a day you can actually finish.</p>
+  <p class="article-meta">A&amp;C Creative Ventures · Productivity</p>
+</div>
+
+<article class="article-body">
+
+  <p>A 14-item to-do list feels productive to write and demoralizing to face. By the time you're deciding what to do fourth, fifth, sixth — your brain has already spent real energy just on the deciding, before you've done a single item. That's not a metaphor. It's a measurable effect called <strong>decision fatigue</strong>, and one of the clearest demonstrations of it happened in, of all places, a courtroom.</p>
+
+  <h2>The judges who got harsher as the day went on</h2>
+
+  <p>In a study published in the <em>Proceedings of the National Academy of Sciences</em>, researchers <a href="https://www.pnas.org/doi/10.1073/pnas.1018033108" target="_blank" rel="noopener">Danziger, Levav, and Avnaim-Pesso analyzed over 1,000 parole board rulings</a> made by experienced judges over ten months. The legal facts of each case should have driven the outcome. Instead, the single strongest predictor of a favorable ruling turned out to be something else entirely: <strong>how recently the judge had taken a food break.</strong></p>
+
+  <div class="stat-callout">
+    <span class="stat-num">65%<br>→ ~0%</span>
+    <p class="stat-label">Favorable parole rulings started around 65% right after a break, then fell — sometimes to nearly zero — as the session wore on, before jumping back to roughly 65% after the next break. <a href="https://www.sciencedaily.com/releases/2011/04/110413151639.htm" target="_blank" rel="noopener">(Danziger et al., 2011)</a></p>
+  </div>
+
+  <div class="chart-card">
+    <h4>Favorable Rulings Across a Decision Session</h4>
+    <svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="210" x2="580" y2="210" stroke="rgba(var(--white-rgb),0.15)" stroke-width="1"/>
+      <g>
+        <rect x="60" y="72" width="60" height="138" rx="6" fill="var(--gold)"/>
+        <rect x="150" y="118" width="60" height="92" rx="6" fill="rgba(var(--gold-rgb),0.65)"/>
+        <rect x="240" y="196" width="60" height="14" rx="6" fill="rgba(var(--gold-rgb),0.35)"/>
+        <rect x="330" y="72" width="60" height="138" rx="6" fill="var(--gold)"/>
+        <rect x="420" y="130" width="60" height="80" rx="6" fill="rgba(var(--gold-rgb),0.65)"/>
+        <rect x="510" y="198" width="60" height="12" rx="6" fill="rgba(var(--gold-rgb),0.35)"/>
+      </g>
+      <g fill="var(--white)" font-size="13" font-weight="700" font-family="Archivo Black, sans-serif" text-anchor="middle">
+        <text x="90" y="62">~65%</text><text x="180" y="108">~35%</text><text x="270" y="186">~0%</text>
+        <text x="360" y="62">~65%</text><text x="450" y="120">~35%</text><text x="540" y="188">~0%</text>
+      </g>
+      <g fill="var(--muted)" font-size="11" font-family="Inter, sans-serif" text-anchor="middle">
+        <text x="90" y="228">After break</text><text x="180" y="228">Mid-session</text><text x="270" y="228">Before break</text>
+        <text x="360" y="228">After break</text><text x="450" y="228">Mid-session</text><text x="540" y="228">Before break</text>
+      </g>
+      <line x1="315" y1="40" x2="315" y2="210" stroke="rgba(var(--white-rgb),0.1)" stroke-dasharray="4,4"/>
+    </svg>
+    <p class="chart-caption">Approximate pattern reported in Danziger, Levav &amp; Avnaim-Pesso (2011) across two representative session cycles — not exact per-case published values, but the shape the study describes: a reset after every break, then a steady decline in favorable outcomes as the session continues.</p>
+  </div>
+
+  <p>These were trained legal professionals making high-stakes decisions with full case files in front of them. The break wasn't giving them new information — it was restoring depleted mental resources. If decision fatigue can move outcomes in a courtroom, it's absolutely reshaping your 4 p.m. task list.</p>
+
+  <h2>Why the fix is a number, not a mindset</h2>
+
+  <p>The instinct when a to-do list feels chaotic is to try to summon more willpower or "focus harder." But the judges weren't lacking willpower — they were out of a finite resource that willpower can't refill. The actual fix is structural: reduce the number of decisions the day demands of you, especially early, before fatigue sets in.</p>
+
+  <p>That's the entire logic behind the 3-task rule:</p>
+
+  <ol>
+    <li><strong>Before you open your full task list, pick 3.</strong> Not 3 categories — 3 specific, completable tasks. If your day only produced these 3 things, would you call it a win?</li>
+    <li><strong>Do those 3 first</strong>, in whatever order makes sense, before anything else gets a vote.</li>
+    <li><strong>Everything else goes on a "maybe today" list</strong>, reviewed only after the 3 are done — not decided on all at once, at 8 a.m., while you're fresh.</li>
+  </ol>
+
+  <p>This doesn't mean you only ever do 3 things in a day. It means you're not spending your best, least-fatigued decision-making capacity re-litigating a 14-item list every single morning. You make one real decision — the 3 — and let the rest of the day be execution, not negotiation.</p>
+
+  <div class="action-box">
+    <span class="kicker">Do This Today</span>
+    <p>Right now, before you read anything else: write down exactly 3 tasks for today. Not the whole list — 3. Do those first, and let everything else wait until they're done.</p>
+  </div>
+
+  <div class="source-list">
+    <h3>Sources</h3>
+    <ol>
+      <li><a href="https://www.pnas.org/doi/10.1073/pnas.1018033108" target="_blank" rel="noopener">Danziger, Levav &amp; Avnaim-Pesso, "Extraneous Factors in Judicial Decisions," PNAS (2011)</a></li>
+      <li><a href="https://www.sciencedaily.com/releases/2011/04/110413151639.htm" target="_blank" rel="noopener">ScienceDaily summary of the study</a></li>
+      <li><a href="https://thedecisionlab.com/biases/decision-fatigue" target="_blank" rel="noopener">The Decision Lab, "Decision Fatigue"</a></li>
+    </ol>
+  </div>
+
+  <div class="related-articles">
+    <h3>Related Reading</h3>
+    <a href="/blog/brain-vs-the-clock">Your Brain Is Fighting the Clock (And Losing) →</a>
+    <a href="/blog/evening-reset">The 10-Minute Evening Reset →</a>
+  </div>
+
+</article>
+
+<section class="newsletter" id="newsletter">
+  <div class="newsletter-inner">
+    <span class="kicker">Stay In The Loop</span>
+    <h2>Get daily motivation in your inbox</h2>
+    <p>One email. Practical tips, affirmations, and first access to Prakriya when it launches.</p>
+    <form class="newsletter-form" data-live-endpoint="false" action="#" method="post">
+      <input type="email" name="email" placeholder="you@email.com" required>
+      <button type="submit" class="btn btn-gold">Subscribe</button>
+    </form>
+    <p class="newsletter-note">No spam. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="var(--ink-deep)" stroke="var(--logo-blue)" stroke-width="2.5"/>
+        <circle cx="50" cy="46" r="24" fill="var(--logo-pink)"/>
+        <polygon points="50,42 68,78 32,78" fill="var(--logo-blue)"/>
+      </svg>
+      A&amp;C CREATIVE VENTURES
+    </a>
+    <div class="footer-links">
+      <a href="https://www.instagram.com/aandccreativecompany/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.youtube.com/@aandccreativecompany" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://in.pinterest.com/aandc_creativecompany/" target="_blank" rel="noopener">Pinterest</a>
+      <a href="/about">About</a>
+      <a href="/prakriya">Prakriya</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 A&amp;C Creative Ventures. All rights reserved.</span>
+    <span>Growth mindset, made practical.</span>
+  </div>
+</footer>
+
+<script src="/assets/script.js"></script>
+</body>
+</html>
