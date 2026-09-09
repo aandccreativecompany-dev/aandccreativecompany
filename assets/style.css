@@ -780,6 +780,48 @@ footer {
 }
 .founder-linkedin svg { width: 18px; height: 18px; }
 
+/* ---------- Prakriya screenshot carousel ---------- */
+.screens-section { padding: 70px 24px 90px; }
+.screens-carousel {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding: 20px 6vw 30px;
+  margin: 0 -24px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--gold-rgb),0.4) transparent;
+}
+.screens-carousel::-webkit-scrollbar { height: 8px; }
+.screens-carousel::-webkit-scrollbar-thumb { background: rgba(var(--gold-rgb),0.35); border-radius: 999px; }
+.screens-carousel::-webkit-scrollbar-track { background: transparent; }
+
+.screen-item {
+  flex: 0 0 auto;
+  width: 200px;
+  scroll-snap-align: center;
+  text-align: center;
+}
+.screen-frame {
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--gold-rgb),0.25);
+  box-shadow: 0 18px 40px rgba(var(--ink-deep-rgb),0.45), 0 4px 14px rgba(var(--ink-deep-rgb),0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: var(--ink);
+}
+.screen-item:hover .screen-frame {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 26px 54px rgba(var(--ink-deep-rgb),0.55), 0 8px 20px rgba(var(--gold-rgb),0.2);
+}
+.screen-frame img { width: 100%; height: auto; display: block; }
+.screen-caption { color: var(--lavender-dim); font-size: 13px; margin-top: 14px; line-height: 1.45; padding: 0 4px; }
+
+@media (max-width: 700px) {
+  .screen-item { width: 168px; }
+}
+
 /* ---------- Utility ---------- */
 .center { text-align: center; }
 .mt-lg { margin-top: 60px; }
