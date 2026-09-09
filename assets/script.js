@@ -2,6 +2,27 @@
 // A&C Creative Ventures — shared site behavior
 // ============================================
 
+// ---------- Theme toggle (dark/light) ----------
+// The actual theme is applied as early as possible by a small blocking
+// inline script in each page's <head> (before first paint, to avoid a
+// flash of the wrong theme). This just wires up the button and keeps
+// localStorage in sync once the DOM is ready.
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const root = document.documentElement;
+    const isLight = root.getAttribute('data-theme') === 'light';
+    const next = isLight ? 'dark' : 'light';
+    if (next === 'dark') {
+      root.removeAttribute('data-theme');
+    } else {
+      root.setAttribute('data-theme', 'light');
+    }
+    try { localStorage.setItem('ac-theme', next); } catch (e) { /* storage unavailable */ }
+  });
+});
+
 // Mobile nav toggle
 document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.querySelector('.nav-toggle');
