@@ -646,6 +646,33 @@ footer {
 .video-embed-featured { max-width: 860px; margin: 0 auto 48px; }
 .video-embed-featured .video-embed { aspect-ratio: 16/9; }
 
+.shorts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 18px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+.shorts-embed {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid rgba(var(--gold-rgb),0.18);
+  aspect-ratio: 9/16;
+  background: rgba(var(--white-rgb),0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 14px;
+}
+.shorts-embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+
 /* ---------- Blog / article pages ---------- */
 .article-hero {
   padding: 60px 24px 20px;
@@ -812,10 +839,58 @@ footer {
   background: var(--ink);
 }
 .screen-item:hover .screen-frame {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-8px);
   box-shadow: 0 26px 54px rgba(var(--ink-deep-rgb),0.55), 0 8px 20px rgba(var(--gold-rgb),0.2);
 }
-.screen-frame img { width: 100%; height: auto; display: block; }
+.screen-frame img { width: 100%; height: auto; display: block; transition: transform 0.4s ease; will-change: transform; }
+.screen-item:hover .screen-frame img { transform: scale(1.18); }
+
+/* ---------- inCarna (in-progress brand section) ---------- */
+.building-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(var(--gold-rgb),0.14);
+  border: 1px solid rgba(var(--gold-rgb),0.4);
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  margin: 0 auto 22px;
+}
+.building-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: pulse-dot 1.6s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.vm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px; }
+.vm-card {
+  background: rgba(var(--white-rgb),0.03);
+  border: 1px solid rgba(var(--white-rgb),0.08);
+  border-radius: 20px;
+  padding: 30px 28px;
+}
+.vm-card h3 { font-family: var(--font-display); color: var(--white); font-size: 20px; margin: 8px 0 12px; }
+.vm-card p { color: var(--lavender-dim); font-size: 15px; line-height: 1.6; margin: 0; }
+@media (max-width: 700px) { .vm-grid { grid-template-columns: 1fr; } }
+
+.incarna-product-card { position: relative; }
+.incarna-product-card .swatch {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--ink-deep);
+  text-align: center;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #F6D9C4, #E8B8C6);
+}
 .screen-caption { color: var(--lavender-dim); font-size: 13px; margin-top: 14px; line-height: 1.45; padding: 0 4px; }
 
 @media (max-width: 700px) {
