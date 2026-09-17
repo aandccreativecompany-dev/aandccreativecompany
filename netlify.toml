@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Existing static-file behavior is unaffected — this only adds a functions
+# directory to a site that previously had no build step at all.
