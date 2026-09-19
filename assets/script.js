@@ -160,3 +160,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// ---------- Masterclass registration form (Netlify Forms) ----------
+// Real submission, unlike the newsletter form above — Netlify picks this
+// form up at deploy time because of the data-netlify attribute + hidden
+// form-name field in the HTML. Submitted here via fetch so the page doesn't
+// navigate away; falls back to a normal (non-JS) form POST if fetch fails,
+// since the form still works without JavaScript at all.
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.querySelector('.register-form');
+  if (!form) return;
+  const successNote = document.getElementById('register-success');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const body = new URLSearchParams(data).toString();
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Submission failed: ' + res.status);
+        form.reset();
+        form.hidden = true;
+        if (successNote) successNote.hidden = false;
+      })
+      .catch(() => {
+        // Netlify Forms isn't set up on this deploy yet (or the request
+        // failed) — fall back to a plain form submission so the browser's
+        // own POST still reaches Netlify's form handler once it is live,
+        // rather than silently losing the registration.
+        form.submit();
+      });
+  });
+});
