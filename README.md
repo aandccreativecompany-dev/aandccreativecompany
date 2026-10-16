@@ -7,7 +7,7 @@ Follow us: [Instagram](https://www.instagram.com/aandccreativecompany/) · [YouT
 
 ## About
 
-A&C Creative Ventures translates mindset theory and outcome engineering principles into daily habits people can actually act on. The site is organized around three content pillars — Productivity, Outcome Engineering, and Motivation — plus Prakriyā (the daily practice app/page), Personal Care, and an About page.
+A&C Creative Ventures translates mindset theory and outcome engineering principles into daily habits people can actually act on. The site is organized around three content pillars — Productivity, Outcome Engineering, and Motivation — plus Prakriyā (the daily practice app/page), inCArna (skincare brand, with the Skin Care intake form), and an About page.
 
 ## Tech Stack
 
@@ -27,7 +27,6 @@ A&C Creative Ventures translates mindset theory and outcome engineering principl
 ├── outcome-engineering.html   # Outcome Engineering pillar (formerly "Manifestation")
 ├── motivation.html            # Motivation pillar
 ├── prakriya.html              # Prakriyā web app + Android APK download
-├── personal-care.html         # Personal Care → Skin Care intake form
 ├── ads.txt                    # Google AdSense authorization file
 ├── _redirects                 # Netlify redirect: /manifestation → /outcome-engineering
 └── assets/
@@ -45,7 +44,6 @@ A&C Creative Ventures translates mindset theory and outcome engineering principl
 | `outcome-engineering.html` | Outcome engineering (manifestation) principles grounded in psychology |
 | `motivation.html` | Daily motivation content |
 | `prakriya.html` | Prakriyā web app (sign-up gated) plus the Android APK download for beta testers |
-| `personal-care.html` | Personal Care hub — currently just the Skin Care intake form |
 | `about.html` | About the company |
 
 ## Featuring Instagram / Threads posts
