@@ -197,3 +197,38 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 });
+
+// Interactive framework: hover (mouse), tap/click, or arrow keys to switch pillars.
+(function () {
+  const section = document.getElementById('framework');
+  if (!section) return;
+  const tabs = Array.from(section.querySelectorAll('.fw-tab'));
+  const panels = Array.from(section.querySelectorAll('.fw-panel'));
+  if (!tabs.length || tabs.length !== panels.length) return;
+  section.classList.add('fw-js');
+
+  function select(i, focus) {
+    tabs.forEach((t, n) => {
+      const on = n === i;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      panels[n].hidden = !on;
+    });
+    if (focus) tabs[i].focus();
+  }
+
+  const canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i));
+    if (canHover) t.addEventListener('mouseenter', () => select(i));
+    t.addEventListener('keydown', (e) => {
+      let next = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (i - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = tabs.length - 1;
+      if (next !== null) { e.preventDefault(); select(next, true); }
+    });
+  });
+  select(0);
+})();
