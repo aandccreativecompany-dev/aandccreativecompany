@@ -1515,7 +1515,7 @@ footer {
 .fw-stage { padding: 8px 18px; border-radius: 999px; border: 1.5px solid rgba(var(--gold-rgb),0.45); color: var(--lavender-dim); }
 .fw-stage-end { background: var(--gold); border-color: var(--gold); color: #1B0F33; }
 .fw-arrow { color: var(--gold); font-size: 20px; }
-.fw-tabs { display: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 26px; }
+.fw-tabs { display: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 26px; }
 .fw-section.fw-js .fw-tabs { display: grid; }
 .fw-tab { text-align: left; cursor: pointer; font: inherit; color: var(--lavender-dim); background: rgba(var(--white-rgb),0.04); border: 1.5px solid rgba(var(--white-rgb),0.14); border-radius: 18px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; transition: transform .2s, border-color .2s, background .2s; }
 .fw-tab:hover, .fw-tab:focus-visible { transform: translateY(-4px); border-color: rgba(var(--gold-rgb),0.7); }
@@ -1540,10 +1540,38 @@ footer {
 .fw-copy blockquote { margin: 22px 0 0; padding: 16px 20px; border-left: 4px solid var(--gold); background: rgba(var(--gold-rgb),0.1); border-radius: 0 14px 14px 0; color: var(--white); font-weight: 600; }
 .fw-cta { margin-top: 10px; }
 @media (max-width: 860px) {
-  .fw-tabs { grid-template-columns: 1fr; gap: 10px; }
+  .fw-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .fw-panel { grid-template-columns: 1fr; gap: 22px; }
   .fw-fig { max-width: 460px; margin: 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   .fw-tab, .fw-section.fw-js .fw-panel { transition: none; animation: none; }
 }
+
+/* Live diagrams */
+.fw-fig { position: relative; padding: 0 0 12px; }
+.fw-fig.fw-live-on > img { display: none; }
+.fw-svg { display: block; width: 100%; height: auto; }
+.fw-info { padding: 12px 16px; min-height: 64px; border-radius: 14px; background: #fff; border: 1.5px solid rgba(27,18,51,.12); color: #1B1233; font-size: 14.5px; line-height: 1.45; animation: fw-in .3s ease; }
+.fw-info strong { display: block; font-size: 12px; letter-spacing: 1.5px; margin-bottom: 2px; }
+.fw-info.is-wrong strong { color: #D4503F; }
+.fw-info.is-right strong { color: #2F7B7B; }
+.fw-foot { display: flex; gap: 10px; align-items: stretch; margin: 0 14px; }
+.fw-foot .fw-info { flex: 1; margin: 0; }
+.fw-replay { cursor: pointer; align-self: flex-start; font: inherit; font-size: 12.5px; font-weight: 700; color: #1B1233; background: #fff; border: 1.5px solid rgba(27,18,51,.2); border-radius: 999px; padding: 6px 12px; }
+.fw-replay:hover, .fw-replay:focus-visible { border-color: #F2B93B; outline: none; box-shadow: 0 0 0 3px rgba(242,185,59,.4); }
+.fw-node { cursor: pointer; outline: none; opacity: 0; transform: scale(.6); transform-box: fill-box; transform-origin: center; transition: transform .28s cubic-bezier(.34,1.56,.64,1), opacity .3s; }
+.fw-node.in { opacity: 1; transform: none; }
+.fw-node.in:hover, .fw-node.in:focus-visible, .fw-node.in.lit { transform: translateY(-4px) scale(1.06); }
+.fw-node .fw-shape { transition: fill .25s, filter .25s; }
+.fw-node.in:hover .fw-shape, .fw-node.in:focus-visible .fw-shape { filter: drop-shadow(0 6px 6px rgba(27,18,51,.22)); }
+.fw-node.lit text { fill: #1B1233 !important; }
+.fw-node.lit .fw-shape { fill: #FFE9A8 !important; filter: drop-shadow(0 0 10px rgba(242,185,59,.9)); }
+.fw-node.fw-nofocus:focus-visible .fw-shape { stroke-dasharray: 6 4; }
+.fw-node.shake { animation: fw-shake .55s ease; }
+@keyframes fw-shake { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-4deg); } 40% { transform: rotate(4deg); } 60% { transform: rotate(-3deg); } 80% { transform: rotate(2deg); } }
+.fw-spark { pointer-events: none; transition: opacity .3s; }
+.fw-say { pointer-events: none; }
+.fw-twinkle { animation: fw-tw 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes fw-tw { 0%,100% { opacity: .25; transform: scale(.7); } 50% { opacity: 1; transform: scale(1.15); } }
+@media (prefers-reduced-motion: reduce) { .fw-node, .fw-node.shake, .fw-twinkle, .fw-info { animation: none; transition: none; } }

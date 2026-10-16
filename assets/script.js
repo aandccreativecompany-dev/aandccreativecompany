@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Interactive framework: hover (mouse), tap/click, or arrow keys to switch pillars.
+// Interactive framework: pillar tabs plus live, animated diagrams.
 (function () {
   const section = document.getElementById('framework');
   if (!section) return;
@@ -207,7 +207,369 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!tabs.length || tabs.length !== panels.length) return;
   section.classList.add('fw-js');
 
+  const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const NS = 'http://www.w3.org/2000/svg';
+  const C = { ink: '#1B1233', coral: '#F26B5B', coralFill: '#FBE4E0', teal: '#2F7B7B', tealFill: '#DDEDEA', gold: '#F2B93B', cream: '#FBF8F3' };
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const ease = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  // ---- Lesson content: every box explains itself on hover, focus or tap ----
+  const LESSONS = [
+    {
+      layout: 'fan', name: 'Outcome Engineering',
+      wrongTitle: ['MOST PEOPLE'], rightTitle: ['OUTCOME', 'ENGINEERING'],
+      wrong: [
+        { l: ['ACTION'], t: 'Busy work: a task picked because it was in front of you, not because it leads somewhere.' },
+        { l: ['ACTION'], t: 'Another task on the pile. Still no clear destination.' },
+        { l: ['ACTION'], t: 'And another. It feels productive, but nothing connects them.' },
+        { l: ['?'], t: 'Where is all this heading? Nobody can say, so you end up busy, not effective.' }
+      ],
+      right: [
+        { l: ['OUTCOME'], t: 'A specific result, like "Leading a team of 3 within 12 months". A direction is not an outcome.' },
+        { l: ['ACTION'], t: 'Chosen because it moves you toward the outcome.' },
+        { l: ['ACTION'], t: 'Every action has a reason, and the reason is the outcome.' },
+        { l: ['ACTION'], t: 'If an action does not serve the outcome, it does not make the list.' }
+      ],
+      wrongSay: 'busy...', rightSay: 'on target!'
+    },
+    {
+      layout: 'stack', loop: true, name: 'Belief Refactoring',
+      wrongTitle: ['MOST PEOPLE'], rightTitle: ['BELIEF', 'REFACTORING'],
+      wrong: [
+        { l: ['WAIT FOR', 'PROOF'], t: '"Seeing is believing." You hold back until evidence shows up.' },
+        { l: ['NEVER', 'ACT'], t: 'With no action, no evidence is ever created.' },
+        { l: ['NOTHING', 'TO SEE'], t: 'So there is still nothing to see, and the loop starts over.' }
+      ],
+      right: [
+        { l: ['BELIEVE', 'FIRST'], t: '"Believing is seeing." Decide it is true before the proof arrives.' },
+        { l: ['ACT LIKE', "IT'S TRUE"], t: 'Take the actions someone who believed it would take, starting today.' },
+        { l: ['RESULTS', 'APPEAR'], t: 'The promotion becomes evidence of what you already decided.' }
+      ],
+      wrongSay: 'again...', rightSay: 'it shows up!'
+    },
+    {
+      layout: 'stack', loop: true, name: 'Identity Deployment',
+      wrongTitle: ['MOST PEOPLE'], rightTitle: ['IDENTITY', 'DEPLOYMENT'],
+      wrong: [
+        { l: ['WAIT TO', 'FEEL READY'], t: '"Feel ready, then act." Confidence is expected to arrive first.' },
+        { l: ['NEVER', 'ACT'], t: 'Readiness never comes on its own, so nothing happens.' },
+        { l: ['STAY THE', 'SAME'], t: 'Nothing changed, so you wait again.' }
+      ],
+      right: [
+        { l: ['ACT LIKE', 'THEM NOW'], t: 'Be the version of you who has already made the change. Today, not eventually.' },
+        { l: ['REPEAT', 'IT'], t: 'Speak up once, send the message once, then do it again. Identity is built from repetition.' },
+        { l: ['BECOME', 'THEM'], t: 'The feeling is not the starting line. It is the byproduct.' }
+      ],
+      wrongSay: 'not yet...', rightSay: "that's you!"
+    },
+    {
+      layout: 'stack', loop: true, name: 'Systems vs Goals',
+      wrongTitle: ['MOST PEOPLE'], rightTitle: ['SYSTEM', 'DESIGN'],
+      wrong: [
+        { l: ['WANT THE', 'OUTCOME'], t: 'A goal on its own is just a wish with a date on it.' },
+        { l: ['RELY ON', 'WILLPOWER'], t: 'Willpower is a battery. It drains fastest when life gets busy.' },
+        { l: ['BURN', 'OUT'], t: 'When the battery dies, so does the effort, and you start over.' }
+      ],
+      right: [
+        { l: ['BUILD THE', 'PROCESS'], t: 'Design the routine that produces the result, so it does not depend on mood.' },
+        { l: ['SHOW UP', 'DAILY'], t: 'Small, steady reps beat occasional bursts.' },
+        { l: ['RESULTS', 'AUTOMATED'], t: 'The routine runs, and the results follow without a daily fight.' }
+      ],
+      wrongSay: 'drained...', rightSay: 'on autopilot!'
+    }
+  ];
+
+  function lines(parent, cx, cy, arr, size, fill) {
+    const lh = size + 3;
+    const t = el('text', { 'text-anchor': 'middle', 'font-size': size, 'font-weight': 800, fill: fill, 'font-family': 'inherit' }, parent);
+    arr.forEach((ln, i) => {
+      const sp = el('tspan', { x: cx, y: cy - ((arr.length - 1) * lh) / 2 + i * lh + size * 0.35 }, t);
+      sp.textContent = ln;
+    });
+    return t;
+  }
+
+  function build(fig, L) {
+    const uid = 'fw' + Math.random().toString(36).slice(2, 7);
+    const live = document.createElement('div');
+    live.className = 'fw-live';
+    const svg = el('svg', { viewBox: '0 0 640 600', class: 'fw-svg', role: 'group', 'aria-label': L.name + ': most people versus ' + L.name + '. Touch any box to see what it means.' });
+    const defs = el('defs', {}, svg);
+    [['c', C.coral], ['t', C.teal]].forEach((m) => {
+      const mk = el('marker', { id: uid + m[0], viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs);
+      el('path', { d: 'M1 1 L9 5 L1 9', fill: 'none', stroke: m[1], 'stroke-width': 1.8, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, mk);
+    });
+    const flt = el('filter', { id: uid + 'w', x: '-5%', y: '-5%', width: '110%', height: '110%' }, defs);
+    el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.025', numOctaves: 2, seed: 4, result: 'n' }, flt);
+    el('feDisplacementMap', { in: 'SourceGraphic', in2: 'n', scale: 3 }, flt);
+
+    el('rect', { x: 0, y: 0, width: 640, height: 600, fill: C.cream }, svg);
+    el('rect', { x: 10, y: 10, width: 300, height: 580, rx: 26, fill: C.coralFill, stroke: C.coral, 'stroke-width': 3, filter: 'url(#' + uid + 'w)' }, svg);
+    el('rect', { x: 330, y: 10, width: 300, height: 580, rx: 26, fill: C.tealFill, stroke: C.teal, 'stroke-width': 3, filter: 'url(#' + uid + 'w)' }, svg);
+    lines(svg, 160, 52, L.wrongTitle, 22, C.coral);
+    lines(svg, 480, L.rightTitle.length > 1 ? 44 : 52, L.rightTitle, 22, C.teal);
+    // a few twinkling stars on the good side
+    [[596, 120], [366, 560], [600, 480]].forEach((p, i) => {
+      const sg = el('g', { transform: 'translate(' + p[0] + ' ' + p[1] + ')' }, svg);
+      const st = el('path', { d: 'M0 -9 L2.5 -2.5 L9 0 L2.5 2.5 L0 9 L-2.5 2.5 L-9 0 L-2.5 -2.5Z', fill: C.gold, class: 'fw-twinkle' }, sg);
+      st.style.animationDelay = i * 0.7 + 's';
+    });
+
+    const nodes = { wrong: [], right: [] };
+    const all = [];
+    const arrows = [];
+
+    function arrow(d, side) {
+      const p = el('path', { d: d, fill: 'none', stroke: side === 'wrong' ? C.coral : C.teal, 'stroke-width': 3, 'stroke-linecap': 'round', 'marker-end': 'url(#' + uid + (side === 'wrong' ? 'c' : 't') + ')' }, svg);
+      arrows.push(p);
+      return p;
+    }
+    function node(side, spec, i, x, y, w, h, kind) {
+      const wrong = side === 'wrong';
+      const primary = !wrong && i === 0;
+      const g = el('g', { class: 'fw-node', tabindex: 0, role: 'button', 'aria-label': spec.l.join(' ') + ': ' + spec.t }, svg);
+      const stroke = wrong ? C.coral : C.teal;
+      const fill = primary ? C.teal : '#FFFFFF';
+      let shape;
+      if (kind === 'circle') shape = el('circle', { cx: x + w / 2, cy: y + h / 2, r: w / 2, fill: fill, stroke: stroke, 'stroke-width': 3, class: 'fw-shape' }, g);
+      else shape = el('rect', { x: x, y: y, width: w, height: h, rx: 18, fill: fill, stroke: stroke, 'stroke-width': 3, class: 'fw-shape', filter: 'url(#' + uid + 'w)' }, g);
+      lines(g, x + w / 2, y + h / 2, spec.l, kind === 'circle' ? 34 : (w < 100 ? 14 : 20), primary ? C.cream : C.ink);
+      const n = { round: kind === 'circle', g: g, cx: x + w / 2, cy: y + h / 2, top: y, bottom: y + h, left: x, right: x + w, spec: spec, side: side };
+      nodes[side].push(n); all.push(n);
+      const show = () => info(n);
+      g.addEventListener('mouseenter', show);
+      g.addEventListener('focus', show);
+      g.addEventListener('click', show);
+      g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); } });
+      return n;
+    }
+
+    if (L.layout === 'stack') {
+      const ys = [140, 270, 400], w = 190, h = 84;
+      [['wrong', 160], ['right', 480]].forEach((s) => {
+        const list = L[s[0]];
+        list.forEach((spec, i) => node(s[0], spec, i, s[1] - w / 2 + (s[0] === 'wrong' ? 12 : 0), ys[i], w, h));
+        for (let i = 0; i < 2; i++) {
+          const a = nodes[s[0]][i], b = nodes[s[0]][i + 1];
+          arrow('M' + a.cx + ' ' + (a.bottom + 4) + ' L' + b.cx + ' ' + (b.top - 6), s[0]);
+        }
+      });
+      const n0 = nodes.wrong[0], n2 = nodes.wrong[2];
+      L._loop = el('path', { d: 'M' + n2.left + ' ' + n2.cy + ' C ' + (n2.left - 48) + ' ' + n2.cy + ' ' + (n0.left - 48) + ' ' + n0.cy + ' ' + (n0.left - 4) + ' ' + n0.cy, fill: 'none', stroke: C.coral, 'stroke-width': 3, 'stroke-linecap': 'round', 'marker-end': 'url(#' + uid + 'c)' }, svg);
+      arrows.push(L._loop);
+    } else {
+      const ys = [120, 214, 308], w = 190, h = 64;
+      for (let i = 0; i < 3; i++) node('wrong', L.wrong[i], i, 160 - w / 2, ys[i], w, h);
+      node('wrong', L.wrong[3], 3, 160 - 38, 404, 76, 76, 'circle');
+      for (let i = 0; i < 3; i++) {
+        const a = nodes.wrong[i], b = nodes.wrong[i + 1];
+        arrow('M' + a.cx + ' ' + (a.bottom + 4) + ' L' + b.cx + ' ' + (b.top - 6), 'wrong');
+      }
+      const o = node('right', L.right[0], 0, 480 - 95, 120, 190, 74);
+      [-98, 0, 98].forEach((dx, k) => {
+        const a = node('right', L.right[k + 1], k + 1, 480 + dx - 44, 372, 88, 62);
+        arrow('M' + (o.cx + dx * 0.35) + ' ' + (o.bottom + 4) + ' C ' + (o.cx + dx * 0.35) + ' ' + (o.bottom + 90) + ' ' + a.cx + ' ' + (a.top - 90) + ' ' + a.cx + ' ' + (a.top - 6), 'right');
+      });
+    }
+
+    const spark = {};
+    ['wrong', 'right'].forEach((side) => {
+      const g = el('g', { class: 'fw-spark', opacity: 0 }, svg);
+      el('circle', { r: 15, fill: C.gold, opacity: 0.35 }, g);
+      el('circle', { r: 9, fill: C.gold, stroke: C.ink, 'stroke-width': 1.5 }, g);
+      el('path', { d: 'M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4Z', fill: '#fff' }, g);
+      spark[side] = g;
+    });
+
+    live.appendChild(svg);
+    const infoBar = document.createElement('div');
+    infoBar.className = 'fw-info';
+    infoBar.setAttribute('aria-live', 'polite');
+    const DEFAULT_INFO = 'Hover, tap or tab to any box to see what it means.';
+    infoBar.textContent = DEFAULT_INFO;
+    const replay = document.createElement('button');
+    replay.type = 'button';
+    replay.className = 'fw-replay';
+    replay.textContent = '↻ Replay';
+    const foot = document.createElement('div');
+    foot.className = 'fw-foot';
+    foot.appendChild(infoBar);
+    foot.appendChild(replay);
+    live.appendChild(foot);
+    fig.appendChild(live);
+    fig.classList.add('fw-live-on');
+
+    function info(n) {
+      infoBar.className = 'fw-info ' + (n.side === 'wrong' ? 'is-wrong' : 'is-right');
+      infoBar.textContent = '';
+      const st = document.createElement('strong');
+      st.textContent = (n.side === 'wrong' ? 'MOST PEOPLE: ' : L.name.toUpperCase() + ': ') + n.spec.l.join(' ');
+      infoBar.appendChild(st);
+      infoBar.appendChild(document.createTextNode(n.spec.t));
+    }
+
+    // ---- Motion ----
+    let run = 0;
+    const alive = (r) => r === run;
+    const place = (s, x, y) => s.setAttribute('transform', 'translate(' + x + ' ' + y + ')');
+    function tween(r, ms, fn) {
+      return new Promise((res) => {
+        const t0 = performance.now();
+        (function f(t) {
+          if (!alive(r)) return res();
+          const p = Math.min(1, (t - t0) / ms);
+          fn(ease(p));
+          if (p < 1) requestAnimationFrame(f); else res();
+        })(t0);
+      });
+    }
+    const moveTo = (r, s, from, to, ms) => tween(r, ms, (p) => place(s, from[0] + (to[0] - from[0]) * p, from[1] + (to[1] - from[1]) * p));
+    const alongPath = (r, s, path, ms) => { const len = path.getTotalLength(); return tween(r, ms, (p) => { const pt = path.getPointAtLength(len * p); place(s, pt.x, pt.y); }); };
+    async function light(r, n, ms) { n.g.classList.add('lit'); await sleep(ms); n.g.classList.remove('lit'); }
+    async function say(r, x, y, text, color) {
+      const g = el('g', { class: 'fw-say' }, svg);
+      const w = text.length * 8.2 + 22;
+      el('rect', { x: x - w / 2, y: y - 18, width: w, height: 28, rx: 14, fill: '#fff', stroke: color, 'stroke-width': 2 }, g);
+      const t = el('text', { x: x, y: y + 1, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 700, fill: C.ink, 'font-family': 'inherit' }, g);
+      t.textContent = text;
+      g.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 250, fill: 'forwards' });
+      await sleep(1300);
+      g.remove();
+    }
+    function burst(x, y) {
+      const cols = [C.gold, C.teal, C.coral, '#fff'];
+      for (let i = 0; i < 14; i++) {
+        const a = (Math.PI * 2 * i) / 14, d = 46 + (i % 3) * 16;
+        const dot = el(i % 2 ? 'circle' : 'path', i % 2 ? { r: 4.5, fill: cols[i % 4] } : { d: 'M0 -7 L2 -2 L7 0 L2 2 L0 7 L-2 2 L-7 0 L-2 -2Z', fill: cols[i % 4] }, svg);
+        dot.style.pointerEvents = 'none';
+        dot.animate([
+          { transform: 'translate(' + x + 'px,' + y + 'px) scale(1)', opacity: 1 },
+          { transform: 'translate(' + (x + Math.cos(a) * d) + 'px,' + (y + Math.sin(a) * d) + 'px) scale(.2)', opacity: 0 }
+        ], { duration: 950, easing: 'ease-out', fill: 'forwards' }).onfinish = () => dot.remove();
+      }
+    }
+    const show = (s, v) => s.setAttribute('opacity', v);
+    const pt = (n) => (n.round ? [n.cx, n.cy] : [n.left + 14, n.cy]);
+
+    async function wrongSeq(r) {
+      const s = spark.wrong, w = nodes.wrong;
+      show(s, 1); place(s, ...pt(w[0]));
+      await light(r, w[0], 550);
+      for (let i = 1; i < w.length && alive(r); i++) {
+        await moveTo(r, s, pt(w[i - 1]), pt(w[i]), 650);
+        await light(r, w[i], 500);
+      }
+      if (!alive(r)) return;
+      const last = w[w.length - 1];
+      last.g.classList.remove('shake'); void last.g.getBoundingClientRect(); last.g.classList.add('shake');
+      say(r, last.cx, last.top - 14, L.wrongSay, C.coral);
+      if (L.layout === 'stack') {
+        await moveTo(r, s, pt(last), [last.left, last.cy], 250);
+        await alongPath(r, s, L._loop, 1100);
+        await moveTo(r, s, [w[0].left - 4, w[0].cy], pt(w[0]), 250);
+        await light(r, w[0], 400);
+      } else {
+        await sleep(1100);
+      }
+      show(s, 0);
+    }
+    async function rightSeq(r) {
+      const s = spark.right, n = nodes.right;
+      show(s, 1); place(s, ...pt(n[0]));
+      await light(r, n[0], 600);
+      if (L.layout === 'stack') {
+        for (let i = 1; i < n.length && alive(r); i++) {
+          await moveTo(r, s, pt(n[i - 1]), pt(n[i]), 650);
+          await light(r, n[i], 500);
+        }
+        if (!alive(r)) return;
+        burst(n[n.length - 1].cx, n[n.length - 1].cy);
+        n[n.length - 1].g.classList.add('lit');
+        await say(r, n[n.length - 1].cx, n[n.length - 1].top - 14, L.rightSay, C.teal);
+        n[n.length - 1].g.classList.remove('lit');
+      } else {
+        for (let i = 1; i < n.length && alive(r); i++) {
+          await moveTo(r, s, pt(n[0]), pt(n[i]), 600);
+          await light(r, n[i], 450);
+          await moveTo(r, s, pt(n[i]), pt(n[0]), 450);
+        }
+        if (!alive(r)) return;
+        burst(n[0].cx, n[0].cy);
+        n[0].g.classList.add('lit');
+        await say(r, n[0].cx, n[0].top - 14, L.rightSay, C.teal);
+        n[0].g.classList.remove('lit');
+      }
+      show(s, 0);
+    }
+    async function loopSide(r, seq, gap) {
+      while (alive(r)) { await seq(r); if (alive(r)) await sleep(gap); }
+    }
+
+    function resetNodes(animated) {
+      all.forEach((n) => { n.g.classList.remove('in', 'lit', 'shake'); n.g.style.transitionDelay = ''; });
+      arrows.forEach((a) => {
+        const len = a.getTotalLength ? a.getTotalLength() : 0;
+        a.style.transition = 'none';
+        a.style.strokeDasharray = len; a.style.strokeDashoffset = animated ? len : 0;
+        a.style.opacity = animated ? 0 : 1;
+      });
+    }
+    function enter(animated) {
+      void svg.getBoundingClientRect();
+      all.forEach((n, i) => {
+        if (animated) n.g.style.transitionDelay = i * 110 + 'ms';
+        n.g.classList.add('in');
+      });
+      arrows.forEach((a, i) => {
+        if (!animated) return;
+        a.style.transition = 'stroke-dashoffset .6s ease ' + (260 + i * 90) + 'ms, opacity .2s ease ' + (260 + i * 90) + 'ms';
+        a.style.strokeDashoffset = 0; a.style.opacity = 1;
+      });
+      if (animated) setTimeout(() => { all.forEach((n) => { n.g.style.transitionDelay = ''; }); }, all.length * 110 + 500);
+    }
+
+    const api = {
+      play() {
+        const r = ++run;
+        show(spark.wrong, 0); show(spark.right, 0);
+        infoBar.className = 'fw-info'; infoBar.textContent = DEFAULT_INFO;
+        if (reduce) { resetNodes(false); enter(false); return; }
+        resetNodes(true); enter(true);
+        setTimeout(() => {
+          if (!alive(r)) return;
+          loopSide(r, wrongSeq, 700);
+          setTimeout(() => { if (alive(r)) loopSide(r, rightSeq, 1200); }, 500);
+        }, 1100);
+      },
+      stop() { run++; show(spark.wrong, 0); show(spark.right, 0); }
+    };
+    replay.addEventListener('click', () => api.play());
+    resetNodes(false);
+    return api;
+  }
+
+  const diagrams = [];
+  panels.forEach((p, i) => {
+    const fig = p.querySelector('.fw-fig');
+    const idx = fig ? parseInt(fig.getAttribute('data-lesson'), 10) : -1;
+    diagrams[i] = fig && LESSONS[idx] ? build(fig, LESSONS[idx]) : null;
+  });
+
+  // ---- Tabs ----
+  let current = 0, visible = false;
+  function sync() {
+    diagrams.forEach((d, n) => { if (d && (!visible || n !== current)) d.stop(); });
+    if (visible && diagrams[current]) diagrams[current].play();
+  }
   function select(i, focus) {
+    current = i;
     tabs.forEach((t, n) => {
       const on = n === i;
       t.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -215,12 +577,12 @@ document.addEventListener('DOMContentLoaded', () => {
       panels[n].hidden = !on;
     });
     if (focus) tabs[i].focus();
+    sync();
   }
-
   const canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
   tabs.forEach((t, i) => {
-    t.addEventListener('click', () => select(i));
-    if (canHover) t.addEventListener('mouseenter', () => select(i));
+    t.addEventListener('click', () => { if (i !== current) select(i); });
+    if (canHover) t.addEventListener('mouseenter', () => { if (i !== current) select(i); });
     t.addEventListener('keydown', (e) => {
       let next = null;
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % tabs.length;
@@ -230,5 +592,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (next !== null) { e.preventDefault(); select(next, true); }
     });
   });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      const now = entries[0].isIntersecting;
+      if (now !== visible) { visible = now; sync(); }
+    }, { threshold: 0.15 }).observe(section);
+  } else {
+    visible = true;
+  }
   select(0);
 })();
