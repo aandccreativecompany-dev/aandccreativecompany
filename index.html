@@ -13,8 +13,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A&amp;C Creative Ventures — The Outcome Engineering Masterclass</title>
 <meta name="description" content="A live masterclass on Outcome Engineering, Belief Refactoring, and Identity Deployment — the A&C Creative Ventures system for turning mindset work into real daily action.">
+<link rel="canonical" href="https://aandccreativeventures.com/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#150C28">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="A&amp;C Creative Ventures">
+<meta property="og:title" content="A&amp;C Creative Ventures — The Outcome Engineering Masterclass">
+<meta property="og:description" content="A live masterclass on Outcome Engineering, Belief Refactoring, and Identity Deployment — the A&amp;C Creative Ventures system for turning mindset work into real daily action.">
+<meta property="og:url" content="https://aandccreativeventures.com/">
+<meta property="og:image" content="https://aandccreativeventures.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "A&C Creative Ventures",
+  "url": "https://aandccreativeventures.com/",
+  "logo": "https://aandccreativeventures.com/assets/favicon.svg",
+  "sameAs": [
+    "https://www.instagram.com/aandccreativeventures/",
+    "https://www.youtube.com/@aandccreativeventures",
+    "https://in.pinterest.com/aandc_creativeventures/"
+  ]
+}
+</script>
 
 <!-- Google AdSense site verification -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1274669317188546"
@@ -376,7 +400,9 @@
     <span class="kicker">Stay In The Loop</span>
     <h2>Get notified about the next masterclass</h2>
     <p>One email. New session dates, and first access to what we build next.</p>
-    <form class="newsletter-form" data-live-endpoint="false" action="#" method="post">
+    <form class="newsletter-form" name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="newsletter">
+      <p class="hp-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
       <input type="email" name="email" placeholder="you@email.com" required>
       <button type="submit" class="btn btn-gold">Subscribe</button>
     </form>
@@ -400,7 +426,9 @@
       <a href="https://www.youtube.com/@aandccreativeventures" target="_blank" rel="noopener">YouTube</a>
       <a href="https://in.pinterest.com/aandc_creativeventures/" target="_blank" rel="noopener">Pinterest</a>
       <a href="/about">About</a>
+      <a href="/products">Products</a>
       <a href="/prakriya">Prakriya</a>
+      <a href="/contact">Contact</a>
       <a href="/privacy">Privacy</a>
     </div>
   </div>

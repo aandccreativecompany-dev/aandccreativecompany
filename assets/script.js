@@ -139,24 +139,42 @@ document.addEventListener('DOMContentLoaded', () => {
   if ((igHasPosts || threadsHasPosts) && fallback) fallback.style.display = 'none';
 });
 
-// ---------- Newsletter form ----------
-// NOTE: This currently just shows a confirmation message locally.
-// Once your Brevo account is set up, replace the form's `action` attribute
-// (in each HTML file) with your real Brevo form endpoint — no JS changes needed.
+// ---------- Newsletter form (Netlify Forms) ----------
+// Submitted via fetch so the page doesn't navigate away. Netlify picks the
+// form up at deploy time from its data-netlify attribute; new signups show up
+// under Forms -> newsletter in the Netlify dashboard (and can be emailed to
+// you from Site configuration -> Forms -> Form notifications).
 document.addEventListener('DOMContentLoaded', () => {
   const forms = document.querySelectorAll('.newsletter-form');
   forms.forEach(form => {
     form.addEventListener('submit', (e) => {
-      if (form.dataset.liveEndpoint !== 'true') {
-        e.preventDefault();
-        const input = form.querySelector('input[type=email]');
-        const note = form.parentElement.querySelector('.newsletter-note');
-        if (note) {
-          note.textContent = 'Signup form not yet connected — see Step 4 in your setup guide to link Brevo.';
-          note.style.color = '#F2B93B';
-        }
-        if (input) input.value = '';
-      }
+      e.preventDefault();
+      const note = form.parentElement.querySelector('.newsletter-note');
+      const button = form.querySelector('button[type=submit]');
+      const body = new URLSearchParams(new FormData(form)).toString();
+      if (button) button.disabled = true;
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body,
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error('Signup failed: ' + res.status);
+          form.reset();
+          if (note) {
+            note.textContent = "You're on the list — thank you! We'll be in touch soon.";
+            note.style.color = '#F2B93B';
+          }
+        })
+        .catch(() => {
+          if (note) {
+            note.textContent = "Couldn't sign you up just now — please try again, or email aandccreativecompany@gmail.com.";
+            note.style.color = '#F2B93B';
+          }
+        })
+        .finally(() => {
+          if (button) button.disabled = false;
+        });
     });
   });
 });

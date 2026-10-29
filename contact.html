@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  (function() {
+    try {
+      var t = localStorage.getItem('ac-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — A&amp;C Creative Ventures</title>
+<meta name="description" content="Get in touch with A&amp;C Creative Ventures — questions about our book, products, the Prakriyā app, or the masterclass.">
+<link rel="canonical" href="https://aandccreativeventures.com/contact">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="theme-color" content="#150C28">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="A&amp;C Creative Ventures">
+<meta property="og:title" content="Contact — A&amp;C Creative Ventures">
+<meta property="og:description" content="Get in touch with A&amp;C Creative Ventures — questions about our book, products, the Prakriyā app, or the masterclass.">
+<meta property="og:url" content="https://aandccreativeventures.com/contact">
+<meta property="og:image" content="https://aandccreativeventures.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/style.css">
+<!-- Google AdSense site verification -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1274669317188546"
+     crossorigin="anonymous"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1274669317188546",
+    enable_page_level_ads: true
+  });
+</script>
+</head>
+<body class="bg-gradient">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="var(--ink-deep)" stroke="var(--logo-blue)" stroke-width="2.5"/>
+        <circle cx="50" cy="46" r="24" fill="var(--logo-pink)"/>
+        <g stroke="var(--logo-pink)" stroke-width="2" opacity="0.7">
+          <line x1="50" y1="12" x2="50" y2="18"/><line x1="74" y1="22" x2="70" y2="26"/><line x1="26" y1="22" x2="30" y2="26"/>
+        </g>
+        <polygon points="50,42 68,78 32,78" fill="var(--logo-blue)"/>
+        <rect x="20" y="78" width="60" height="4" fill="var(--logo-pink)"/>
+      </svg>
+      A&amp;C CREATIVE VENTURES
+    </a>
+    <div class="nav-right">
+      <div class="nav-links">
+      <a href="/about">About</a>
+      <a href="/products">Products</a>
+      <a href="/">Masterclass</a>
+      <a href="/prakriya">Prakriya</a>
+      <a href="/incarna">inCArna</a>
+    </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light and dark theme" title="Toggle theme"><span class="icon-light">☀️</span><span class="icon-dark">🌙</span></button>
+      <button class="nav-toggle">☰</button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <span class="kicker">Get In Touch</span>
+  <h1>Contact us</h1>
+  <p>Questions about our book, our products, the Prakriyā app, or the masterclass? Send a message and we'll reply by email.</p>
+</header>
+
+<section class="section register-section" style="padding-top:20px;">
+  <div class="register-card">
+    <span class="kicker">Send A Message</span>
+    <h2>We read every message</h2>
+    <p>Prefer email? Write to <a href="mailto:aandccreativecompany@gmail.com" style="color:var(--gold);">aandccreativecompany@gmail.com</a>.</p>
+    <form class="register-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="contact">
+      <p class="hp-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+      <input type="text" name="name" placeholder="Your name" required>
+      <input type="email" name="email" placeholder="you@email.com" required>
+      <textarea name="message" placeholder="How can we help?" required></textarea>
+      <button type="submit" class="btn btn-gold">Send message &rarr;</button>
+    </form>
+    <p class="register-success" id="register-success" hidden>Thank you — your message is on its way. We'll reply by email.</p>
+    <p class="register-note" style="margin:20px 0 0; font-size:13px; color:var(--muted);">We only use your details to reply to you. See our <a href="/privacy" style="color:var(--gold);">privacy policy</a>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="footer-brand">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="var(--ink-deep)" stroke="var(--logo-blue)" stroke-width="2.5"/>
+        <circle cx="50" cy="46" r="24" fill="var(--logo-pink)"/>
+        <polygon points="50,42 68,78 32,78" fill="var(--logo-blue)"/>
+      </svg>
+      A&amp;C CREATIVE VENTURES
+    </a>
+    <div class="footer-links">
+      <a href="https://www.instagram.com/aandccreativeventures/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.youtube.com/@aandccreativeventures" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://in.pinterest.com/aandc_creativeventures/" target="_blank" rel="noopener">Pinterest</a>
+      <a href="/about">About</a>
+      <a href="/products">Products</a>
+      <a href="/prakriya">Prakriya</a>
+      <a href="/contact">Contact</a>
+      <a href="/privacy">Privacy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 A&amp;C Creative Ventures. All rights reserved.</span>
+    <span>Growth mindset, made practical.</span>
+  </div>
+</footer>
+
+<script src="/assets/script.js"></script>
+</body>
+</html>

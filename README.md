@@ -3,7 +3,7 @@
 Official website for **A&C Creative Ventures** — practical productivity, outcome engineering, and daily motivation content, built as a static site.
 
 Live site: deployed via Netlify (see `ads.txt` / AdSense integration below)
-Follow us: [Instagram](https://www.instagram.com/aandccreativecompany/) · [YouTube](https://www.youtube.com/@aandccreativecompany) · [Pinterest](https://in.pinterest.com/aandc_creativecompany/)
+Follow us: [Instagram](https://www.instagram.com/aandccreativeventures/) · [YouTube](https://www.youtube.com/@aandccreativeventures) · [Pinterest](https://in.pinterest.com/aandc_creativeventures/)
 
 ## About
 
@@ -21,30 +21,41 @@ A&C Creative Ventures translates mindset theory and outcome engineering principl
 
 ```
 .
-├── index.html                 # Home page
-├── about.html                 # About page
-├── productivity.html          # Productivity pillar
-├── outcome-engineering.html   # Outcome Engineering pillar (formerly "Manifestation")
-├── motivation.html            # Motivation pillar
-├── prakriya.html              # Prakriyā web app + Android APK download
-├── ads.txt                    # Google AdSense authorization file
-├── _redirects                 # Netlify redirect: /manifestation → /outcome-engineering
+├── index.html        # Home — The Outcome Engineering Masterclass, registration, newsletter
+├── about.html        # About + founders
+├── products.html     # Our book, planners, free downloads, shop links
+├── prakriya.html     # Prakriyā web app info + Android app
+├── incarna.html      # inCArna skincare sub-brand
+├── contact.html      # Contact form + email
+├── privacy.html      # Privacy policy
+├── 404.html          # Not-found page (served automatically by Netlify)
+├── robots.txt        # Crawl rules + sitemap location
+├── sitemap.xml       # Page list for search engines
+├── ads.txt           # Google AdSense authorization file
+├── _redirects        # Netlify redirects (old URLs → current pages)
+├── netlify.toml      # Netlify build/functions config
+├── downloads/        # Free PDF/EPUB downloads
+├── netlify/functions # Coach-chat serverless function
 └── assets/
-    ├── style.css               # Site-wide styles
-    ├── script.js                # Site-wide scripts (nav, affirmations, social embeds)
-    └── app.js                   # Prakriyā web app (Supabase-backed)
+    ├── style.css     # Site-wide styles
+    ├── script.js     # Site-wide scripts (nav, theme, forms, embeds)
+    ├── app.js        # Prakriyā web app logic
+    ├── favicon.svg, og-image.png
+    ├── products/     # Product images (book cover)
+    ├── founders/, framework/, prakriya-screens/
 ```
 
-## Pages
+## Forms
 
-| Page | Description |
-|---|---|
-| `index.html` | Home page with hero section, social links, pillar overview, and a "From the feed" section |
-| `productivity.html` | Productivity systems, habits, and focus strategies |
-| `outcome-engineering.html` | Outcome engineering (manifestation) principles grounded in psychology |
-| `motivation.html` | Daily motivation content |
-| `prakriya.html` | Prakriyā web app (sign-up gated) plus the Android APK download for beta testers |
-| `about.html` | About the company |
+The masterclass registration, newsletter and contact forms use **Netlify Forms**
+(`data-netlify="true"` plus a honeypot field). Netlify detects them on deploy;
+submissions appear under **Forms** in the Netlify dashboard. To get an email for
+each one: Site configuration → Forms → Form notifications → Add notification.
+
+## Adding a product
+
+Add a `featured-product` block (see the book at `#book` in `products.html`), put its
+image in `assets/products/`, and add the page to `sitemap.xml` if it gets its own URL.
 
 ## Featuring Instagram / Threads posts
 
