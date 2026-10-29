@@ -71,7 +71,7 @@
   </div>
   <span class="kicker">The Android App</span>
   <h1>Prakriyā — your daily <span>growth ritual.</span></h1>
-  <p>Habits, priorities, goals, scripting, evening reflection, your vision board, and your mind map — one small practice a day, engineered to compound. Grab the Android app and help us test it.</p>
+  <p>Habits, priorities, goals, scripting, evening reflection, your vision board, and your mind map — one small practice a day, engineered to compound. Built for Android, currently in testing.</p>
 </header>
 
 <!-- ========== FEATURE STRIP ========== -->
@@ -84,76 +84,78 @@
   <div class="feature-chip"><span class="emoji">🧠</span><span class="label">Mind Map</span></div>
 </div>
 
-<!-- ========== GET THE APP (APK, GitHub) ========== -->
-<div class="app-download-band">
-  <div class="app-download-card">
-    <div>
-      <h3>📱 Try the Android app (beta)</h3>
-      <p>Prakriyā is a native Android app, currently in testing. Download the latest build straight from GitHub, put it through its paces, and tell us what breaks or what's missing.</p>
-    </div>
-    <div class="app-download-actions">
-      <a class="btn btn-gold" href="https://github.com/aandccreativecompany-dev/ritualist_app/releases/latest" target="_blank" rel="noopener">Download the APK ↗</a>
-      <a class="btn btn-outline" href="mailto:aandccreativecompany@gmail.com?subject=Prakriy%C4%81%20app%20feedback" target="_blank" rel="noopener">Send feedback</a>
-      <span class="app-download-note">Android only, for testers. You'll need to allow "install from unknown sources" — it's not on the Play Store yet.</span>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SCREENSHOT CAROUSEL ========== -->
-<section class="screens-section" id="screenshots">
+<!-- ========== APP SHOWCASE ========== -->
+<section class="showcase" id="screenshots">
   <div class="section-head">
     <span class="kicker">See It In Action</span>
-    <h2>What a day inside Prakriyā looks like</h2>
-    <p>Real screens from the app in testing — swipe through to see how each section works.</p>
+    <h2>A calmer way to run your day</h2>
+    <p>Nine screens, one daily ritual. Tap through to see how Prakriyā turns intention into action.</p>
   </div>
 
-  <div class="screens-carousel">
-
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/dashboard-checkin.jpg" alt="Prakriyā morning mood check-in"></div>
-      <p class="screen-caption">Start the day with a one-tap pulse-check, not a blank page.</p>
+  <div class="showcase-grid">
+    <div class="showcase-tabs" role="tablist" aria-label="Prakriyā features">
+      <button class="showcase-tab active" type="button" data-index="0" role="tab" aria-selected="true">
+        <span class="showcase-tab-emoji" aria-hidden="true">☀️</span>
+        <span class="showcase-tab-text"><strong>Morning check-in</strong><span>Start the day with a one-tap pulse-check, not a blank page.</span></span>
+      </button>
+      <button class="showcase-tab" type="button" data-index="1" role="tab" aria-selected="false">
+        <span class="showcase-tab-emoji" aria-hidden="true">🏠</span>
+        <span class="showcase-tab-text"><strong>Your day at a glance</strong><span>Priorities, habits and every section of your life on one calm screen.</span></span>
+      </button>
+      <button class="showcase-tab" type="button" data-index="2" role="tab" aria-selected="false">
+        <span class="showcase-tab-emoji" aria-hidden="true">🌸</span>
+        <span class="showcase-tab-text"><strong>Daily mantra</strong><span>A new mantra every day, ready to share the moment it lands.</span></span>
+      </button>
+      <button class="showcase-tab" type="button" data-index="3" role="tab" aria-selected="false">
+        <span class="showcase-tab-emoji" aria-hidden="true">✅</span>
+        <span class="showcase-tab-text"><strong>Goals & habits</strong><span>To-dos, weekly and monthly goals, and habit streaks built to actually get checked off.</span></span>
+      </button>
+      <button class="showcase-tab" type="button" data-index="4" role="tab" aria-selected="false">
+        <span class="showcase-tab-emoji" aria-hidden="true">✍️</span>
+        <span class="showcase-tab-text"><strong>Outcome engineering</strong><span>Journal, reflect, script and map your goals — the practice behind the promise.</span></span>
+      </button>
+      <button class="showcase-tab" type="button" data-index="5" role="tab" aria-selected="false">
+        <span class="showcase-tab-emoji" aria-hidden="true">💰</span>
+        <span class="showcase-tab-text"><strong>Money roadmap</strong><span>A goal roadmap and a 50/30/20 budget calculator, in one tap.</span></span>
+      </button>
+      <button class="showcase-tab" type="button" data-index="6" role="tab" aria-selected="false">
+        <span class="showcase-tab-emoji" aria-hidden="true">💪</span>
+        <span class="showcase-tab-text"><strong>Body & health</strong><span>An interval bell and a tap-to-add habit list that stacks, not overwhelms.</span></span>
+      </button>
+      <button class="showcase-tab" type="button" data-index="7" role="tab" aria-selected="false">
+        <span class="showcase-tab-emoji" aria-hidden="true">🧠</span>
+        <span class="showcase-tab-text"><strong>Mindset reframes</strong><span>Catch a negative thought mid-sentence and reframe it on the spot.</span></span>
+      </button>
+      <button class="showcase-tab" type="button" data-index="8" role="tab" aria-selected="false">
+        <span class="showcase-tab-emoji" aria-hidden="true">🤝</span>
+        <span class="showcase-tab-text"><strong>Stay connected</strong><span>Never lose track of who you meant to check in on.</span></span>
+      </button>
     </div>
 
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/dashboard.jpg" alt="Prakriyā dashboard overview"></div>
-      <p class="screen-caption">Your whole life, one screen — priorities, habits, and every section at a glance.</p>
+    <div class="showcase-stage">
+      <div class="showcase-glow" aria-hidden="true"></div>
+      <div class="showcase-phone">
+        <div class="showcase-notch" aria-hidden="true"></div>
+        <div class="showcase-screen">
+          <img class="showcase-shot active" src="/assets/prakriya-screens/dashboard-checkin.jpg" alt="Prakriyā morning mood check-in" width="480" height="980" data-index="0">
+          <img class="showcase-shot" src="/assets/prakriya-screens/dashboard.jpg" alt="Prakriyā dashboard overview" width="480" height="980" loading="lazy" data-index="1">
+          <img class="showcase-shot" src="/assets/prakriya-screens/mantra-share.jpg" alt="Prakriyā daily mantra share screen" width="480" height="980" loading="lazy" data-index="2">
+          <img class="showcase-shot" src="/assets/prakriya-screens/productivity.jpg" alt="Prakriyā productivity section" width="480" height="980" loading="lazy" data-index="3">
+          <img class="showcase-shot" src="/assets/prakriya-screens/outcome-engineering.jpg" alt="Prakriyā outcome engineering section" width="480" height="980" loading="lazy" data-index="4">
+          <img class="showcase-shot" src="/assets/prakriya-screens/finance.jpg" alt="Prakriyā finance section" width="480" height="980" loading="lazy" data-index="5">
+          <img class="showcase-shot" src="/assets/prakriya-screens/health.jpg" alt="Prakriyā health section" width="480" height="980" loading="lazy" data-index="6">
+          <img class="showcase-shot" src="/assets/prakriya-screens/mindset.jpg" alt="Prakriyā mindset section" width="480" height="980" loading="lazy" data-index="7">
+          <img class="showcase-shot" src="/assets/prakriya-screens/connect.jpg" alt="Prakriyā relationships section" width="480" height="980" loading="lazy" data-index="8">
+        </div>
+      </div>
+      <div class="showcase-dots" aria-hidden="true"></div>
     </div>
+  </div>
 
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/mantra-share.jpg" alt="Prakriyā daily mantra share screen"></div>
-      <p class="screen-caption">A new mantra every day, ready to share the moment it lands.</p>
-    </div>
-
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/productivity.jpg" alt="Prakriyā productivity section with goals and habits"></div>
-      <p class="screen-caption">Goals, to-dos, and habit streaks — built to actually get checked off.</p>
-    </div>
-
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/outcome-engineering.jpg" alt="Prakriyā outcome engineering section"></div>
-      <p class="screen-caption">Journal, reflect, and map your goals — the practice behind the promise.</p>
-    </div>
-
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/finance.jpg" alt="Prakriyā finance and money section"></div>
-      <p class="screen-caption">A goal roadmap and a 50/30/20 budget calculator, in one tap.</p>
-    </div>
-
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/health.jpg" alt="Prakriyā health and body section"></div>
-      <p class="screen-caption">An interval bell and a tap-to-add habit list that stacks, not overwhelms.</p>
-    </div>
-
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/mindset.jpg" alt="Prakriyā mindset and growth section"></div>
-      <p class="screen-caption">Catch a negative thought mid-sentence and reframe it on the spot.</p>
-    </div>
-
-    <div class="screen-item">
-      <div class="screen-frame"><img src="/assets/prakriya-screens/connect.jpg" alt="Prakriyā relationships and connection section"></div>
-      <p class="screen-caption">Never lose track of who you meant to check in on.</p>
-    </div>
-
+  <div class="showcase-cta">
+    <span class="showcase-badge">Coming soon to Google Play</span>
+    <p>Prakriyā is in final testing and launching on Android soon. Want to know the moment it's live?</p>
+    <a class="btn btn-gold" href="/contact">Notify me at launch</a>
   </div>
 </section>
 
@@ -185,5 +187,6 @@
 </footer>
 
 <script src="/assets/script.js"></script>
+<script src="/assets/showcase.js" defer></script>
 </body>
 </html>
