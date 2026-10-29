@@ -13,7 +13,7 @@ A&C Creative Ventures translates mindset theory and outcome engineering principl
 
 - **HTML5** — static, multi-page site (no build step / framework)
 - **CSS3** — custom styling in `assets/style.css`
-- **JavaScript** — interactivity (nav toggle, affirmations, social embeds) in `assets/script.js`, Prakriyā web app logic in `assets/app.js`
+- **JavaScript** — interactivity (nav toggle, affirmations, social embeds) in `assets/script.js`
 - **Netlify** — hosting and deployment (`_redirects` handles the old `/manifestation` URL)
 - **Google AdSense** — ad monetization (site verified via `ads.txt`)
 
@@ -39,7 +39,6 @@ A&C Creative Ventures translates mindset theory and outcome engineering principl
 └── assets/
     ├── style.css     # Site-wide styles
     ├── script.js     # Site-wide scripts (nav, theme, forms, embeds)
-    ├── app.js        # Prakriyā web app logic
     ├── favicon.svg, og-image.png
     ├── products/     # Product images (book cover)
     ├── founders/, framework/, prakriya-screens/
