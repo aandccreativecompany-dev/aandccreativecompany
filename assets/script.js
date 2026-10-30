@@ -620,3 +620,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   select(0);
 })();
+
+/* ---- Visitor counter (Netlify Function + Blobs; fails silently) ---- */
+(function () {
+  var box = document.getElementById('visit-counter');
+  var num = document.getElementById('visit-count');
+  if (!box || !num || !window.fetch) return;
+  var counted = false;
+  try { counted = localStorage.getItem('aac_visit_counted') === '1'; } catch (e) {}
+  fetch('/api/visits', { method: counted ? 'GET' : 'POST' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      if (typeof d.count !== 'number') return;
+      num.textContent = d.count.toLocaleString('en-IN');
+      box.hidden = false;
+      try { localStorage.setItem('aac_visit_counted', '1'); } catch (e) {}
+    })
+    .catch(function () { /* counter unavailable: stay hidden */ });
+})();

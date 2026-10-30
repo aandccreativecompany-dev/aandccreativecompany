@@ -1669,3 +1669,7 @@ footer {
   .showcase-phone { width: 250px; }
 }
 @media (prefers-reduced-motion: reduce) { .showcase-phone, .showcase-glow { animation: none; } .showcase-shot { transition: none; } }
+
+.visit-counter { color: var(--lavender-dim); font-size: 13px; }
+.visit-counter[hidden] { display: none; }
+.visit-counter strong { color: var(--gold-light); }
