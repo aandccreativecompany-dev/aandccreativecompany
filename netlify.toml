@@ -7,3 +7,14 @@
 
 # Existing static-file behavior is unaffected — this only adds a functions
 # directory to a site that previously had no build step at all.
+
+# Prakriyā Web (/app): always revalidate the service worker so updates roll out.
+[[headers]]
+  for = "/app/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/app/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"

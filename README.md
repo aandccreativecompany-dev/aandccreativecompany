@@ -85,6 +85,15 @@ npx serve .
 
 The site is deployed automatically via Netlify on pushes to the `main` branch.
 
+## Prakriyā Web (`/app`)
+
+A local-first web/desktop version of the Prakriyā app (plain JS, no build step), installable as a PWA.
+Data lives in `localStorage` and uses the **same JSON shape as the Android app's `AppState`**, so signing in with
+Google syncs through the same Firestore document (`users/{uid}` → `state`). Unknown keys are preserved on round trips.
+
+To enable sync, fill in `app/firebase-config.js` (Firebase console → project `prakriya-82d0e` → Add web app) and add
+`aandccreativeventures.com` to Firebase Auth → Authorized domains. Without it the app works fully on-device.
+
 ## License
 
 © A&C Creative Ventures. All rights reserved.
