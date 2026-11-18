@@ -55,14 +55,42 @@ window.addEventListener('hashchange', render);
 let lastDay = new Date().toDateString();
 setInterval(() => { const d = new Date().toDateString(); if (d !== lastDay) { lastDay = d; render(); } }, 60000);
 
-document.getElementById('app').replaceChildren(
-  el('a', { class: 'skip', href: '#view', onclick: (e) => { e.preventDefault(); view.focus(); } }, 'Skip to content'),
-  el('aside', { class: 'side' },
-    el('a', { class: 'brand', href: '#/today' }, el('img', { src: '/app/icons/icon-192.png', alt: '', width: 36, height: 36 }), el('span', null, el('strong', { text: 'Prakriyā' }), el('em', { text: 'Daily practice' }))),
-    nav, syncPill),
-  view);
+const skip = el('a', { class: 'skip', href: '#view', onclick: (e) => { e.preventDefault(); view.focus(); } }, 'Skip to content');
+const side = el('aside', { class: 'side' },
+  el('a', { class: 'brand', href: '#/today' }, el('img', { src: '/app/icons/icon-192.png', alt: '', width: 36, height: 36 }), el('span', null, el('strong', { text: 'Prakriyā' }), el('em', { text: 'Daily practice' }))),
+  nav, syncPill);
+
+// Sign-in gate: when Firebase is configured, people sign in before using the app.
+// (Not configured yet = local-only mode, so the app still works during setup.)
+const gated = Sync.isConfigured();
+const gateMsg = el('p', { class: 'gate-msg', role: 'status' });
+const gateBtn = el('button', { class: 'btn gate-btn', type: 'button', onclick: () => Sync.signIn() }, 'Continue with Google');
+const gate = el('section', { class: 'gate', 'aria-labelledby': 'gate-h' },
+  el('div', { class: 'gate-card' },
+    el('img', { src: '/app/icons/icon-192.png', alt: '', width: 72, height: 72 }),
+    el('h1', { id: 'gate-h', text: 'Welcome to Prakriyā' }),
+    el('p', { text: 'Sign in to open your daily practice. Your habits, journal and goals stay private to you and sync with the Prakriyā phone app.' }),
+    gateBtn, gateMsg,
+    el('p', { class: 'gate-fine' }, 'We only use your Google account to keep your data yours. ', el('a', { href: '/privacy.html' }, 'Privacy'))));
+let shellShown = null;
+function paintGate() {
+  if (!gated) return;
+  const { status, msg } = Sync.getStatus();
+  const known = !!S.getMeta().uid;                 // has signed in on this device before
+  const allow = !!Sync.getUser() || (status === 'error' && known); // offline return visit
+  if (allow !== shellShown) { shellShown = allow; [skip, side, view].forEach((n) => { n.hidden = !allow; }); gate.hidden = allow; if (allow) render(); }
+  const loading = status === 'off' || (status === 'syncing' && !Sync.getUser());
+  gateBtn.disabled = loading;
+  gateBtn.textContent = loading ? 'One moment…' : 'Continue with Google';
+  gateMsg.textContent = status === 'error' && !known ? 'Could not reach sign-in. Check your connection and reload.' : (msg && !Sync.getUser() ? msg : '');
+}
+Sync.onStatus(paintGate);
+
+document.getElementById('app').replaceChildren(skip, side, view, gate);
+if (gated) { [skip, side, view].forEach((n) => { n.hidden = true; }); } else { gate.hidden = true; }
 render();
 Sync.init();
+paintGate();
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/app/sw.js', { scope: '/app/' }).catch(() => {});
 let deferred = null;

@@ -167,3 +167,16 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   .habit-days{grid-template-columns:repeat(14,minmax(0,1fr));width:100%;gap:4px}.dot{width:100%;max-width:22px;aspect-ratio:1;height:auto;justify-self:center}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Sign-in gate */
+[hidden]{display:none!important}
+.gate{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(1200px 600px at 50% -10%,#3a2468 0,#1B0F33 60%);}
+.gate-card{max-width:420px;width:100%;background:var(--surface);color:var(--ink);border-radius:20px;padding:36px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.gate-card img{border-radius:18px}
+.gate-card h1{margin:16px 0 8px;font-size:1.6rem}
+.gate-card p{margin:0 0 18px;line-height:1.55;opacity:.85}
+.gate-btn{width:100%;padding:14px 18px;font-size:1rem;border-radius:12px;background:#E6B450;color:#1B0F33;border:0;font-weight:700;cursor:pointer}
+.gate-btn:disabled{opacity:.6;cursor:wait}
+.gate-msg{min-height:1.2em;margin:12px 0 0!important;color:#b3261e;font-size:.9rem}
+.gate-fine{font-size:.8rem;margin:14px 0 0!important;opacity:.65!important}
+#app:has(>.gate:not([hidden])){display:block}
