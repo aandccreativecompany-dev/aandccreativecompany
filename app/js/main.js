@@ -9,6 +9,9 @@ import * as Money from './views/money.js';
 import * as Progress from './views/progress.js';
 import * as Mind from './views/mind.js';
 import * as Settings from './views/settings.js';
+import * as Growth from './views/growth.js';
+import * as Look from './appearance.js';
+import { splash, mark } from './climber.js';
 
 const ICONS = {
   today: '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>',
@@ -16,19 +19,21 @@ const ICONS = {
   habits: '<path d="M12 3c1 3 5 5 5 10a5 5 0 01-10 0c0-2 1-3 2-4 .5 1 1 1.5 2 1.5C11 8 11 5 12 3z"/>',
   journal: '<path d="M4 4h12a3 3 0 013 3v13H7a3 3 0 01-3-3V4z"/><path d="M8 9h7M8 13h5"/>',
   money: '<rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 14.5h2"/>',
+  growth: '<path d="M12 21v-9"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 15c0-3-2-5-6-5 0 3 2 5 6 5z"/>',
   progress: '<path d="M5 20V11M12 20V4M19 20v-6"/>',
   mind: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17v4M17 19h4"/>',
   settings: '<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
 };
 function icon(k) { const w = document.createElement('span'); w.className = 'ni'; w.setAttribute('aria-hidden', 'true'); w.innerHTML = `<svg viewBox="0 0 24 24">${ICONS[k]}</svg>`; return w; } // static strings only
 const ROUTES = [
-  ['today', 'Today', Today], ['tasks', 'Tasks', Tasks], ['habits', 'Habits', Habits],
+  ['today', 'Today', Today], ['tasks', 'Tasks', Tasks], ['habits', 'Habits', Habits], ['growth', 'Growth', Growth],
   ['journal', 'Reflect', Journal], ['money', 'Money', Money], ['progress', 'Progress', Progress],
   ['mind', 'Mind', Mind], ['settings', 'Settings', Settings],
 ];
 
 S.load();
-Settings.applyTheme(S.get().themeMode);
+Look.apply(S.get());
+splash(); // opening animation, once per browser session; never blocks the app
 await Today.loadMantras();
 
 const view = el('main', { id: 'view', tabindex: '-1' });
@@ -58,27 +63,44 @@ function paintSync() {
   paintMe();
 }
 
+const ORDER = ROUTES.map((r) => r[0]);
 function render() {
   const [key, label, mod] = current();
-  const scroll = window.scrollY;
+  const scroll = window.scrollY, changed = view.dataset.k !== key;
   document.title = `${label} · Prakriyā`;
   paintNav();
-  view.replaceChildren(mod.render(S.get(), render));
-  if (view.dataset.k === key) window.scrollTo(0, scroll); else { window.scrollTo(0, 0); view.focus({ preventScroll: true }); }
+  const page = mod.render(S.get(), render);
+  // Only a change of page animates in — editing something on the page just updates it in place.
+  if (changed && !Look.motionOff()) {
+    const prev = ORDER.indexOf(view.dataset.k), next = ORDER.indexOf(key);
+    page.classList.add('enter', prev >= 0 && next < prev ? 'from-left' : 'from-right');
+    [...page.children].slice(0, 9).forEach((c, i) => c.style.setProperty('--i', i));
+  }
+  view.replaceChildren(page);
+  if (!changed) window.scrollTo(0, scroll); else { window.scrollTo(0, 0); view.focus({ preventScroll: true }); }
   view.dataset.k = key;
 }
 
-S.subscribe((reason) => { if (reason !== 'silent') render(); });
+S.subscribe((reason) => { if (reason === 'replace') Look.apply(S.get()); if (reason !== 'silent') render(); });
+window.addEventListener('prakriya:reapply', () => Look.apply(S.get()));
 Sync.onStatus(paintSync); paintSync();
 window.addEventListener('hashchange', render);
 // New calendar day while the tab stays open: refresh "today".
 let lastDay = new Date().toDateString();
 setInterval(() => { const d = new Date().toDateString(); if (d !== lastDay) { lastDay = d; render(); } }, 60000);
 
+// Back-to-top button: appears after scrolling, glides up.
+const toTop = el('button', { class: 'to-top', type: 'button', 'aria-label': 'Back to top', title: 'Back to top', hidden: true,
+  onclick: () => window.scrollTo({ top: 0, behavior: Look.motionOff() ? 'auto' : 'smooth' }) }, el('span', { 'aria-hidden': 'true' }, '↑'));
+let topShown = false;
+addEventListener('scroll', () => { const on = window.scrollY > 600; if (on !== topShown) { topShown = on; toTop.hidden = false; toTop.classList.toggle('show', on); } }, { passive: true });
+document.body.append(toTop);
+
 const skip = el('a', { class: 'skip', href: '#view', onclick: (e) => { e.preventDefault(); view.focus(); } }, 'Skip to content');
 const brandLink = () => el('a', { class: 'brand', href: '#/today' }, el('img', { src: '/app/icons/icon-192.png', alt: '', width: 36, height: 36 }), el('span', null, el('strong', { text: 'Prakriyā' }), el('em', { text: 'Daily practice' })));
 const side = el('aside', { class: 'side' }, brandLink(), nav, el('div', { class: 'side-foot' }, meBox, syncPill));
-const topbar = el('div', { class: 'topbar' }, brandLink(), syncPill2);
+const gear = el('a', { class: 'gear', href: '#/settings', 'aria-label': 'Settings', title: 'Settings' }, icon('settings'));
+const topbar = el('div', { class: 'topbar' }, brandLink(), el('div', { class: 'topbar-r' }, syncPill2, gear));
 const main = el('div', { class: 'main' }, topbar, view);
 
 // Sign-in gate: when Firebase is configured, people sign in before using the app.
@@ -91,7 +113,7 @@ function setGateBtn(label) { gateBtn.innerHTML = G; gateBtn.append(document.crea
 setGateBtn('Continue with Google');
 const gate = el('section', { class: 'gate', 'aria-labelledby': 'gate-h' },
   el('div', { class: 'gate-card' },
-    el('img', { src: '/app/icons/icon-192.png', alt: '', width: 72, height: 72 }),
+    el('div', { class: 'gate-mark' }, mark(112, { animate: true })),
     el('h1', { id: 'gate-h', text: 'Welcome to Prakriyā' }),
     el('p', { text: 'A calm place for your daily practice — habits, priorities, reflection and money, in one view.' }),
     el('ul', { class: 'gate-points' },

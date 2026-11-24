@@ -1,6 +1,7 @@
 import { el, dayKey, fmtLong } from '../util.js';
 import * as S from '../store.js';
 import { card, checklist, ring, empty } from '../ui.js';
+import { companionCard } from './growth.js';
 
 let MANTRAS = null;
 export async function loadMantras() {
@@ -30,6 +31,8 @@ export function render(s) {
     el('div', null, el('h1', { text: name ? `${hello}, ${name}` : hello }), el('p', { class: 'muted', text: fmtLong(now) })),
     el('div', { class: 'hero-ring' }, ring(facts.score, `${Math.round(facts.score * 100)}%`, "today's progress"), el('span', { class: 'muted small', text: "Today's progress" }))));
 
+  root.append(companionCard(s));
+
   const [text, src] = mantraOfToday(s);
   root.append(el('section', { class: 'card mantra' },
     el('span', { class: 'eyebrow', text: 'Mantra of the day' }),
@@ -54,7 +57,7 @@ export function render(s) {
   const habitsBox = card('Habits', ...(s.habits.length ? [el('ul', { class: 'list' }, s.habits.map((hb) => {
     const done = S.habitDone(hb, key), streak = S.habitStreak(hb, now);
     return el('li', null,
-      el('input', { type: 'checkbox', checked: done, 'aria-label': `${hb.name}: mark done today`, onchange: () => S.toggleHabit(hb.id, key) }),
+      el('input', { type: 'checkbox', checked: done, 'aria-label': `${hb.name}: mark done today`, onchange: (e) => { e.target.classList.add('pop'); setTimeout(() => S.toggleHabit(hb.id, key), 170); } }),
       el('span', { class: `li-text${done ? ' done' : ''}` }, hb.name),
       streak > 0 ? el('span', { class: 'chip', title: `${streak}-day streak` }, `🔥 ${streak}`) : null);
   }))] : [empty('No habits yet.'), el('a', { class: 'btn primary', href: '#/habits' }, 'Add your first habit')]));

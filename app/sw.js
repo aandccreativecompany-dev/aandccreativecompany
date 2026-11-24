@@ -1,7 +1,7 @@
 // Offline support: cache the app shell, always try the network first so an
 // update is picked up as soon as you are online. Cloud sync calls are never cached.
-const CACHE = 'prakriya-web-v2';
-const SHELL = ['/app/', '/app/app.css', '/app/firebase-config.js', '/app/google-config.js', '/app/mantras.json', '/app/js/main.js', '/app/js/util.js', '/app/js/store.js', '/app/js/sync.js', '/app/js/drivebackup.js', '/app/js/ui.js',
+const CACHE = 'prakriya-web-v3';
+const SHELL = ['/app/', '/app/app.css', '/app/firebase-config.js', '/app/google-config.js', '/app/mantras.json', '/app/js/main.js', '/app/js/util.js', '/app/js/store.js', '/app/js/sync.js', '/app/js/drivebackup.js', '/app/js/ui.js', '/app/js/appearance.js', '/app/js/companion.js', '/app/js/climber.js', '/app/js/views/growth.js',
   '/app/js/views/today.js', '/app/js/views/tasks.js', '/app/js/views/habits.js', '/app/js/views/journal.js', '/app/js/views/money.js', '/app/js/views/progress.js', '/app/js/views/mind.js', '/app/js/views/settings.js', '/app/icons/icon-192.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });

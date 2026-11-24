@@ -23,6 +23,7 @@ export function initialState() {
     spendEntries: [], savingsEntries: [], spendBudgetAmount: null, spendBudgetPeriod: 'monthly',
     financeBudgetIncome: null, financeBudgetNeedsPct: 50, financeBudgetWantsPct: 30, financeBudgetSavingsPct: 20,
     financeRoadmap: null, userName: '', themeMode: 'system',
+    themeAccentId: 'gold', fontFamilyId: 'inter', fontScaleId: 'default',
   };
 }
 
@@ -112,5 +113,53 @@ export function dayFacts(d, s = state) {
   score += mind * 25; weight += 25;
   return { key, habitsFrac, tasksFrac, mind, score: weight ? score / weight : 0, active: habitsFrac > 0 || tasksFrac > 0 || mind > 0, hasAny };
 }
+
+// ---- growth (tree / bird) -------------------------------------------------
+// Same engine as the phone app: a day earns up to 100 points (habits 30,
+// priorities 25, mind 20, body 15, reaching out 10); the companion's stage is
+// decided by the running total over the last 365 days. Water, calls and
+// meditation are logged only on the phone, so they are not counted here.
+export const STAGE_MIN = [0, 40, 150, 400, 800, 1400, 2400];
+export const stageFor = (points) => { let o = 0; STAGE_MIN.forEach((m, i) => { if (points >= m) o = i; }); return o; };
+
+export function growth(s = state, now = new Date()) {
+  const today = addDays(now, 0);
+  const meals = {};
+  for (const e of (s.nutritionEntries || [])) { const k = String((e && e.date) || '').slice(0, 10); if (k) meals[k] = (meals[k] || 0) + 1; }
+  const facts = (d) => {
+    const key = dayKey(d), hs = s.habits || [], ts = tasksFor(key, s);
+    const habitsFrac = hs.length ? hs.filter((h) => habitDone(h, key)).length / hs.length : 0;
+    const tasksFrac = ts.length ? ts.filter((t) => t.done).length / ts.length : 0;
+    const mood = !!(s.moodByDay && s.moodByDay[key]), journal = !journalEmpty(s.journalByDay && s.journalByDay[key]);
+    const minds = ((s.doseByDay && s.doseByDay[key]) || []).length + ((s.stressBucketFills && s.stressBucketFills[key]) || []).length + ((s.stressBucketEmpties && s.stressBucketEmpties[key]) || []).length;
+    const mindFrac = ((mood ? 1 : 0) + (journal ? 1 : 0) + (minds > 0 ? 1 : 0)) / 3;
+    const bodyFrac = ((meals[key] || 0) > 0 ? 1 : 0) / 2;
+    const active = habitsFrac > 0 || tasksFrac > 0 || mood || journal || minds > 0 || (meals[key] || 0) > 0;
+    return { key, habitsFrac, tasksFrac, mindFrac, bodyFrac, active, points: Math.round(habitsFrac * 30 + tasksFrac * 25 + mindFrac * 20 + bodyFrac * 15) };
+  };
+  // Start at the earliest recorded activity (at most a year back, at least a week).
+  let first = null;
+  const consider = (k) => { const d = parseDay(String(k).slice(0, 10)); if (isNaN(d) || d > today) return; if (!first || d < first) first = d; };
+  (s.habits || []).forEach((h) => (h.completedDays || []).forEach(consider));
+  Object.entries(s.tasksByDay || {}).forEach(([k, v]) => { if ((v || []).some((t) => t.done)) consider(k); });
+  Object.keys(s.moodByDay || {}).forEach(consider);
+  Object.entries(s.journalByDay || {}).forEach(([k, v]) => { if (!journalEmpty(v)) consider(k); });
+  Object.keys(meals).forEach(consider);
+  let start = first || today; const limit = addDays(today, -365), week = addDays(today, -6);
+  if (start < limit) start = limit; if (start > week) start = week;
+  const days = []; let total = 0, lastStage = 0; const stageUps = {};
+  for (let d = start; d <= today; d = addDays(d, 1)) {
+    const f = facts(d); days.push(f); total += f.points;
+    const st = stageFor(total); if (st > lastStage) { stageUps[f.key] = st; lastStage = st; }
+  }
+  const stage = stageFor(total), next = stage < 6 ? STAGE_MIN[stage + 1] : null;
+  const toNext = next == null ? 1 : clamp01((total - STAGE_MIN[stage]) / (next - STAGE_MIN[stage]));
+  let quiet = 0; for (let i = days.length - 1; i >= 0; i--) { if (days[i].active) break; quiet++; }
+  const wk = days.slice(-7), avg = (fn) => (wk.length ? wk.reduce((a, f) => a + fn(f), 0) / wk.length : 0);
+  return { points: total, stage, next, toNext, thirsty: quiet >= 3, activeDays: wk.filter((f) => f.active).length,
+    daily: days.slice(-30), stageUps,
+    wheel: { habits: avg((f) => f.habitsFrac), priorities: avg((f) => f.tasksFrac), mind: avg((f) => f.mindFrac), body: avg((f) => f.bodyFrac) } };
+}
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
 
 export { dayKey, parseDay };
