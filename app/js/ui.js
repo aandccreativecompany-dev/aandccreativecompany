@@ -41,6 +41,10 @@ export function ring(frac, label, sub) {
   svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('class', 'ring'); svg.setAttribute('role', 'img');
   svg.setAttribute('aria-label', `${label} ${sub || ''}`);
   const mk = (cls, extra) => { const e = document.createElementNS(ns, 'circle'); e.setAttribute('cx', 50); e.setAttribute('cy', 50); e.setAttribute('r', r); e.setAttribute('class', cls); Object.entries(extra || {}).forEach(([k, v]) => e.setAttribute(k, v)); return e; };
+  const defs = document.createElementNS(ns, 'defs'), lg = document.createElementNS(ns, 'linearGradient');
+  lg.setAttribute('id', 'rg'); lg.setAttribute('x1', '0'); lg.setAttribute('y1', '0'); lg.setAttribute('x2', '1'); lg.setAttribute('y2', '1');
+  [['0', '#F2B93B'], ['1', '#7B55E0']].forEach(([o, c]) => { const st = document.createElementNS(ns, 'stop'); st.setAttribute('offset', o); st.setAttribute('stop-color', c); lg.append(st); });
+  defs.append(lg); svg.append(defs);
   svg.append(mk('ring-bg'), mk('ring-fg', { 'stroke-dasharray': `${c * f} ${c}`, transform: 'rotate(-90 50 50)' }));
   const t = document.createElementNS(ns, 'text'); t.setAttribute('x', 50); t.setAttribute('y', 55); t.setAttribute('text-anchor', 'middle'); t.setAttribute('class', 'ring-t'); t.textContent = label;
   svg.append(t);

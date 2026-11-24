@@ -29,12 +29,13 @@ export async function init() {
       import(`${CDN}/firebase-app.js`), import(`${CDN}/firebase-auth.js`), import(`${CDN}/firebase-firestore.js`)]);
     const a = app.initializeApp(window.PRAKRIYA_FIREBASE);
     fb = { app, auth, fs, a, authInst: auth.getAuth(a), db: fs.getFirestore(a) };
-    setStatus('signedout');
+    // Stay in "loading" until Firebase tells us whether someone is already signed in (avoids a sign-in flash).
     auth.onAuthStateChanged(fb.authInst, async (u) => {
       user = u;
-      if (!u) { setStatus('signedout'); return; }
+      if (!u) { stopListening(); setStatus('signedout'); return; }
       S.setMeta({ uid: u.uid });
       await firstSync();
+      listen();
     });
     S.subscribe((reason) => { if (reason === 'local' || reason === 'silent') schedulePush(); });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) checkRemote(); });
@@ -57,12 +58,25 @@ export async function signIn() {
 export async function signOut() {
   if (!fb) return;
   await maybePushBeforeLeaving();
+  stopListening();
   await fb.auth.signOut(fb.authInst);
   S.setMeta({ uid: null, remoteStamp: 0 });
 }
 async function maybePushBeforeLeaving() { if (user && S.getMeta().dirty) await push(true); }
 
 const ref = () => fb.fs.doc(fb.db, 'users', user.uid);
+
+// Realtime: when the phone (or another browser) saves, we hear about it within seconds.
+let unsub = null;
+function listen() {
+  if (unsub || !user || !fb) return;
+  unsub = fb.fs.onSnapshot(ref(), (snap) => {
+    if (snap.metadata.hasPendingWrites) return; // our own write, not yet confirmed
+    checkRemote();
+  }, () => { /* offline: the SDK reconnects by itself */ });
+}
+function stopListening() { if (unsub) { unsub(); unsub = null; } }
+const same = (a, b) => { try { return JSON.stringify(a) === JSON.stringify(b); } catch { return false; } };
 async function fetchRemote() {
   const snap = await fb.fs.getDoc(ref());
   if (!snap.exists()) return null;
@@ -86,7 +100,7 @@ async function firstSync() {
     // Both sides have data and we have never reconciled them — let the user choose.
     const choice = await dialog({
       title: 'Which data should we keep?',
-      body: 'This browser and your Prakriyā account both already have data. Pick one — the other will be replaced. (Your phone app is not affected until it next syncs.)',
+      body: 'This browser and your Prakriyā account both already have data. Pick one — the other will be replaced.',
       actions: [
         { label: 'Use my account data (recommended)', value: 'cloud', kind: 'primary' },
         { label: 'Use this browser’s data', value: 'local' },
@@ -146,19 +160,21 @@ async function handleConflict(remote) {
 }
 
 export async function checkRemote() {
-  if (!user || !fb || busy || document.hidden) return;
+  if (!user || !fb || busy) return;
   try {
     const remote = await fetchRemote();
     const meta = S.getMeta();
     if (!remote || !remote.state || !remote.stamp || remote.stamp <= (meta.remoteStamp || 0)) return;
+    if (same(remote.state, S.get())) { S.setMeta({ remoteStamp: remote.stamp }); return; } // that was our own save
     if (!meta.dirty) { adopt(remote); toast('Updated from your other device'); }
     else await handleConflict(remote);
   } catch { /* offline: ignore */ }
 }
+export const reconnect = () => syncNow();
 export async function syncNow() {
   if (!user || !fb) return;
   await checkRemote();
   if (S.getMeta().dirty) await push(true);
   else setStatus('idle', 'Up to date');
 }
-setInterval(() => { checkRemote(); }, 90000);
+setInterval(() => { checkRemote(); }, 5 * 60000); // safety net; live updates come from the listener

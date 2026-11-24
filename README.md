@@ -88,11 +88,18 @@ The site is deployed automatically via Netlify on pushes to the `main` branch.
 ## Prakriyā Web (`/app`)
 
 A local-first web/desktop version of the Prakriyā app (plain JS, no build step), installable as a PWA.
-Data lives in `localStorage` and uses the **same JSON shape as the Android app's `AppState`**, so signing in with
-Google syncs through the same Firestore document (`users/{uid}` → `state`). Unknown keys are preserved on round trips.
+Google sign-in is required. Data lives in `localStorage` in the **same JSON shape as the Android app's `AppState`** and
+syncs live through the same Firestore document (`users/{uid}` → `state`, `updatedAt`), using a realtime listener, so edits
+on the phone and the web show up on the other within seconds. Unknown keys are preserved on round trips.
+Conflict rule: a device with no unsynced edits adopts newer cloud data; if both changed, the web app asks, Android keeps the later edit.
 
-To enable sync, fill in `app/firebase-config.js` (Firebase console → project `prakriya-82d0e` → Add web app) and add
-`aandccreativeventures.com` to Firebase Auth → Authorized domains. Without it the app works fully on-device.
+Config: `app/firebase-config.js` (Firebase web app of project `prakriya-82d0e`; Authentication → Authorized domains must include
+`aandccreativeventures.com` and `www.aandccreativeventures.com`; Firestore rules allow `users/{uid}` for its owner only).
+Setting it to `null` runs the app local-only.
+
+Optional **Back up to my Drive** (Settings): writes one visible file, `Prakriya backup.json`, to the user's own Drive with the
+narrow `drive.file` scope (`app/js/drivebackup.js`, `app/google-config.js`). One-time Google Cloud setup: enable the Google Drive API
+and add the two site origins as Authorized JavaScript origins on the Web OAuth client.
 
 ## License
 

@@ -1,6 +1,7 @@
 import { el, toast, dialog, confirmBox, dayKey } from '../util.js';
 import * as S from '../store.js';
 import * as Sync from '../sync.js';
+import * as Drive from '../drivebackup.js';
 import { card, pageHead } from '../ui.js';
 
 export function applyTheme(mode) {
@@ -29,14 +30,33 @@ export function render(s, rerender) {
         el('button', { class: 'btn primary', type: 'button', onclick: () => Sync.signIn() }, 'Sign in with Google'), msg ? el('p', { class: 'warn small', text: msg }) : null);
     } else {
       syncBox.append(el('p', null, 'Signed in as ', el('strong', { text: u.email || u.displayName || 'your account' })),
-        el('p', { class: `small ${status === 'error' || status === 'conflict' ? 'warn' : 'muted'}`, text: msg || 'Up to date', 'aria-live': 'polite' }),
-        el('div', { class: 'row' }, el('button', { class: 'btn', type: 'button', onclick: () => Sync.syncNow().then(() => toast('Synced')) }, 'Sync now'),
+        el('p', { class: `small ${status === 'error' || status === 'conflict' || status === 'reconnect' ? 'warn' : 'muted'}`, text: msg || 'Up to date', 'aria-live': 'polite' }),
+        el('div', { class: 'row' }, el('button', { class: 'btn', type: 'button', onclick: () => Sync.syncNow().then(() => toast('Synced')) }, status === 'reconnect' ? 'Reconnect to Google' : 'Sync now'),
           el('button', { class: 'btn ghost', type: 'button', onclick: () => Sync.signOut() }, 'Sign out')));
     }
   };
   paintSync();
   const unsub = Sync.onStatus(() => { if (syncBox.isConnected) paintSync(); else unsub(); });
   root.append(card('Sync with your phone', syncBox));
+
+  // Optional: copy to the person's own Google Drive
+  if (Drive.isAvailable()) {
+    const driveBox = el('div', { class: 'stack' });
+    const when = () => { const t = Drive.lastBackup(); return t ? `Last backed up ${new Date(t).toLocaleString()}` : 'Not backed up to Drive yet'; };
+    const note = el('p', { class: 'small muted', text: when(), 'aria-live': 'polite' });
+    const oops = (e) => toast(e && e.message === 'scope' ? 'Please tick the Google Drive box when asked, then try again.' : e && e.message === 'auth' ? 'Google sign-in was cancelled or blocked. Allow pop-ups and try again.' : 'Could not reach Google Drive. Please try again.', 4500);
+    const b1 = el('button', { class: 'btn', type: 'button', onclick: async () => {
+      b1.disabled = true; try { await Drive.backUp(); note.textContent = when(); toast('Saved to your Google Drive'); } catch (e) { oops(e); } b1.disabled = false; } }, 'Back up to my Drive');
+    const b2 = el('button', { class: 'btn ghost', type: 'button', onclick: async () => {
+      b2.disabled = true;
+      try {
+        const st = await Drive.fetchBackup();
+        if (!st) toast('No Drive backup found yet. Back up first.', 4000);
+        else if (await dialog({ title: 'Restore from Drive?', body: 'This replaces everything in this browser with your last Drive backup.', actions: [{ label: 'Cancel', value: false }, { label: 'Restore', value: true, kind: 'primary' }] })) { S.replaceState(st, { markDirty: true }); toast('Restored from Drive'); }
+      } catch (e) { oops(e); } b2.disabled = false; } }, 'Restore from Drive');
+    driveBox.append(el('p', { class: 'muted', text: 'Keep an extra copy of your data in your own Google Drive. It is a single file you can see and delete anytime. Prakriyā can only access that file, nothing else in your Drive.' }), note, el('div', { class: 'row' }, b1, b2));
+    root.append(card('Google Drive backup', driveBox));
+  }
 
   // Export / import
   const file = el('input', { type: 'file', accept: 'application/json,.json', hidden: true, 'aria-label': 'Import file',
